@@ -243,52 +243,35 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
   padding-left: 16px;
 }
 
-.stats-container {
+/* ── Estilos Inset Grouped Nativos (Listas) ── */
+.ios-inset-group {
   background-color: var(--ios-surface);
   border-radius: 14px;
-  padding: 24px;
+  overflow: hidden;
   margin-bottom: 24px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Native subtle shadow */
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
 
-.stats-total {
+.ios-inset-row {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  padding-bottom: 20px;
+  padding: 16px 20px;
   border-bottom: 1px solid var(--ios-border);
 }
 
-.stats-number {
-  font-size: 48px;
-  font-weight: 700;
-  color: var(--ios-blue);
-  line-height: 1;
+.ios-inset-row:last-child {
+  border-bottom: none;
 }
 
-.stats-label {
-  font-size: 16px;
+.ios-inset-label {
+  font-size: 17px;
+  color: var(--ios-text);
+}
+
+.ios-inset-val {
+  font-size: 17px;
   color: var(--ios-text-secondary);
-  margin-top: 6px;
-  font-weight: 500;
-}
-
-.stats-breakdown {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 16px;
-}
-
-.stats-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: var(--ios-bg);
-  padding: 16px;
-  border-radius: 16px;
 }
 
 .particular-fields-group {

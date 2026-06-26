@@ -412,19 +412,17 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
     }, {});
 
     return (
-      <div className="stats-container glass">
-        <div className="stats-total">
-          <span className="stats-number">{filtered.length}</span>
-          <span className="stats-label">Total Gestiones</span>
+      <div className="ios-inset-group">
+        <div className="ios-inset-row">
+          <span className="ios-inset-label" style={{fontWeight: 600}}>Total Gestiones</span>
+          <span className="ios-inset-val" style={{fontSize: '22px', fontWeight: 700, color: 'var(--ios-blue)'}}>{filtered.length}</span>
         </div>
-        <div className="stats-breakdown">
-          {Object.entries(countBySolicitud).map(([key, val]) => (
-            <div key={key} className="stats-item">
-              <span className="stats-item-label">{key}</span>
-              <span className="stats-item-val">{val}</span>
-            </div>
-          ))}
-        </div>
+        {Object.entries(countBySolicitud).map(([key, val]) => (
+          <div key={key} className="ios-inset-row">
+            <span className="ios-inset-label">{key}</span>
+            <span className="ios-inset-val">{val}</span>
+          </div>
+        ))}
       </div>
     );
   };
