@@ -34,10 +34,11 @@ body.dark-theme {
   --ios-text-secondary: #EBEBF599; /* 60% opacity white */
   --ios-border: #38383A;
   
-  /* Glassmorphism Dark */
-  --glass-bg: rgba(28, 28, 30, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.15);
-  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  /* Glassmorphism Dark (Apple Real) */
+  --glass-bg: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.02) 100%);
+  --glass-border-top: rgba(255, 255, 255, 0.3);
+  --glass-border-bottom: rgba(255, 255, 255, 0.05);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
   
   /* Dynamic fields background */
   --dynamic-bg: rgba(255, 255, 255, 0.05);
@@ -62,9 +63,24 @@ body {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
+  border-top: 1px solid var(--glass-border-top, var(--glass-border));
+  border-left: 1px solid var(--glass-border-top, var(--glass-border));
+  border-right: 1px solid var(--glass-border-bottom, var(--glass-border));
+  border-bottom: 1px solid var(--glass-border-bottom, var(--glass-border));
   box-shadow: var(--glass-shadow);
   border-radius: 20px; /* Redondeo nativo Apple */
+  position: relative;
+  overflow: hidden;
+}
+
+.glass::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  z-index: -1;
 }
 
 /* Base Inputs */
