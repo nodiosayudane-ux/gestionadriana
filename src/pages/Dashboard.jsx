@@ -525,7 +525,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         {activeTab === 'monthly' && renderRecords('monthly')}
       </main>
 
-      <nav className="bottom-nav glass">
+      <nav className="bottom-nav">
         <button className={`nav-item ${activeTab === 'form' ? 'active' : ''}`} onClick={() => setActiveTab('form')}>
           <PlusCircle size={24} />
           <span>Nuevo</span>
