@@ -51,7 +51,7 @@ export default function CustomCalendar({ mode, selectedDate, onDateChange }) {
 
   if (mode === 'monthly') {
     return (
-      <div className="custom-calendar-container glass">
+      <div className="custom-calendar-container">
         <div className="calendar-header">
           <button onClick={handlePrevYear} className="nav-btn"><ChevronLeft size={20} /></button>
           <span className="calendar-title">{year}</span>
@@ -78,7 +78,7 @@ export default function CustomCalendar({ mode, selectedDate, onDateChange }) {
 
   // Daily and Weekly share the same day grid picker
   return (
-    <div className="custom-calendar-container glass">
+    <div className="custom-calendar-container">
       <div className="calendar-header">
         <button onClick={handlePrevMonth} className="nav-btn"><ChevronLeft size={20} /></button>
         <span className="calendar-title">{MONTHS[month]} {year}</span>
