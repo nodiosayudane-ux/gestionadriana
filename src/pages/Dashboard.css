@@ -53,22 +53,7 @@
   flex: 1;
 }
 
-.logout-btn, .theme-toggle-btn {
-  background: none;
-  border: none;
-  color: var(--ios-blue);
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
 
-.logout-btn:hover, .theme-toggle-btn:hover {
-  background-color: rgba(0, 122, 255, 0.1);
-}
 
 .dashboard-content {
   flex: 1;

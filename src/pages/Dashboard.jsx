@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { PlusCircle, Calendar, List, LogOut, Moon, Sun } from 'lucide-react';
+import { PlusCircle, List, Calendar } from 'lucide-react';
 import IosSelect from '../components/IosSelect';
 import CustomCalendar from '../components/CustomCalendar';
 import RecordCard from '../components/RecordCard';
@@ -614,14 +614,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
           }}></span>
         </div>
         <h1>Gestión Dra. Adriana</h1>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <button onClick={toggleTheme} className="theme-toggle-btn">
-            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-          <button onClick={onLogout} className="logout-btn">
-            <LogOut size={24} />
-          </button>
-        </div>
+        <div style={{ width: '60px' }}></div>
       </header>
 
       <main className="dashboard-content">
