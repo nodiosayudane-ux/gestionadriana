@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { PlusCircle, Calendar, List, LogOut, Moon, Sun } from 'lucide-react';
 import IosSelect from '../components/IosSelect';
+import CustomCalendar from '../components/CustomCalendar';
 import './Dashboard.css';
 
 import { supabase } from '../supabaseClient';
@@ -26,6 +27,17 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
   const [particularTipoDoc, setParticularTipoDoc] = useState('');
   const [particularNumeroDoc, setParticularNumeroDoc] = useState('');
   const [particularTelefono, setParticularTelefono] = useState('');
+  
+  const [epsContacto, setEpsContacto] = useState('');
+  const [epsTelefono, setEpsTelefono] = useState('');
+
+  const [instDependencia, setInstDependencia] = useState('');
+  const [instContacto, setInstContacto] = useState('');
+
+  const [gobSecretaria, setGobSecretaria] = useState('');
+  const [gobFuncionario, setGobFuncionario] = useState('');
+  const [gobTelefono, setGobTelefono] = useState('');
+
   const [fechaCita, setFechaCita] = useState('');
   const [especialidad, setEspecialidad] = useState('');
   const [institucion, setInstitucion] = useState('');
@@ -75,6 +87,20 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         particular_tipo_doc: particularTipoDoc,
         particular_numero_doc: particularNumeroDoc,
         particular_telefono: particularTelefono
+      ...(solicitante === 'EPS' && { 
+        eps_nombre: epsAsociada, // Reusing epsAsociada for EPS name if they select EPS in solicitante
+        eps_contacto: epsContacto,
+        eps_telefono: epsTelefono
+      }),
+      ...(solicitante === 'Institucional' && { 
+        inst_nombre: institucion,
+        inst_dependencia: instDependencia,
+        inst_contacto: instContacto
+      }),
+      ...(solicitante === 'Gobernación' && { 
+        gob_secretaria: gobSecretaria,
+        gob_funcionario: gobFuncionario,
+        gob_telefono: gobTelefono
       })
     };
     
@@ -105,6 +131,16 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       setParticularTipoDoc('');
       setParticularNumeroDoc('');
       setParticularTelefono('');
+
+      setEpsContacto('');
+      setEpsTelefono('');
+
+      setInstDependencia('');
+      setInstContacto('');
+
+      setGobSecretaria('');
+      setGobFuncionario('');
+      setGobTelefono('');
       
       alert('Gestión guardada en la nube exitosamente');
     } catch (error) {
@@ -165,6 +201,79 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
             </div>
           </div>
         )}
+
+        {solicitante === 'EPS' && (
+          <div className="particular-fields-group">
+            <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de EPS</h4>
+            <div className="ios-form-row dynamic-field">
+              <label>Nombre EPS</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={epsAsociada} onChange={e => setEpsAsociada(e.target.value)} required placeholder="Ej. Sura, Sanitas" className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Contacto/Asesor</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={epsContacto} onChange={e => setEpsContacto(e.target.value)} required placeholder="Ej. Dra. Ramírez" className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Teléfono/Ext</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={epsTelefono} onChange={e => setEpsTelefono(e.target.value)} required placeholder="Ej. Ext 104" className="ios-text-input" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {solicitante === 'Institucional' && (
+          <div className="particular-fields-group">
+            <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de Institución</h4>
+            <div className="ios-form-row dynamic-field">
+              <label>Institución</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={institucion} onChange={e => setInstitucion(e.target.value)} required placeholder="Ej. Hospital San José" className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Dependencia</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={instDependencia} onChange={e => setInstDependencia(e.target.value)} required placeholder="Ej. Urgencias" className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Contacto</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={instContacto} onChange={e => setInstContacto(e.target.value)} required placeholder="Ej. Jefe Enfermería" className="ios-text-input" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {solicitante === 'Gobernación' && (
+          <div className="particular-fields-group">
+            <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de Gobernación</h4>
+            <div className="ios-form-row dynamic-field">
+              <label>Secretaría</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={gobSecretaria} onChange={e => setGobSecretaria(e.target.value)} required placeholder="Ej. Sec. de Salud" className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Funcionario</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={gobFuncionario} onChange={e => setGobFuncionario(e.target.value)} required placeholder="Ej. Dr. López" className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Teléfono</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={gobTelefono} onChange={e => setGobTelefono(e.target.value)} required placeholder="Ej. 300..." className="ios-text-input" />
+              </div>
+            </div>
+          </div>
+        )}
+
 
         <div className="ios-form-row" style={{ overflow: 'visible' }}>
           <label>Solicitud</label>
@@ -323,21 +432,11 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       <div className="records-list">
         <h2 className="ios-large-title">{titles[timeframe]}</h2>
         
-        {timeframe === 'monthly' ? (
-          <input 
-            type="month" 
-            className="ios-date-picker" 
-            value={selectedMonth} 
-            onChange={(e) => setSelectedMonth(e.target.value)} 
-          />
-        ) : (
-          <input 
-            type="date" 
-            className="ios-date-picker" 
-            value={selectedDate} 
-            onChange={(e) => setSelectedDate(e.target.value)} 
-          />
-        )}
+        <CustomCalendar 
+          mode={timeframe} 
+          selectedDate={timeframe === 'monthly' ? selectedMonth : selectedDate} 
+          onDateChange={timeframe === 'monthly' ? setSelectedMonth : setSelectedDate} 
+        />
         
         {renderStats(filtered)}
 
@@ -358,6 +457,27 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
                     <p><strong>Paciente:</strong> {r.particular_nombre}</p>
                     <p><strong>Documento:</strong> {r.particular_tipo_doc} {r.particular_numero_doc}</p>
                     <p><strong>Teléfono:</strong> {r.particular_telefono}</p>
+                  </div>
+                )}
+                {r.solicitante === 'EPS' && r.eps_nombre && (
+                  <div className="particular-data-card">
+                    <p><strong>EPS:</strong> {r.eps_nombre}</p>
+                    <p><strong>Contacto:</strong> {r.eps_contacto}</p>
+                    <p><strong>Teléfono:</strong> {r.eps_telefono}</p>
+                  </div>
+                )}
+                {r.solicitante === 'Institucional' && r.inst_nombre && (
+                  <div className="particular-data-card">
+                    <p><strong>Institución:</strong> {r.inst_nombre}</p>
+                    <p><strong>Dependencia:</strong> {r.inst_dependencia}</p>
+                    <p><strong>Contacto:</strong> {r.inst_contacto}</p>
+                  </div>
+                )}
+                {r.solicitante === 'Gobernación' && r.gob_secretaria && (
+                  <div className="particular-data-card">
+                    <p><strong>Secretaría:</strong> {r.gob_secretaria}</p>
+                    <p><strong>Funcionario:</strong> {r.gob_funcionario}</p>
+                    <p><strong>Teléfono:</strong> {r.gob_telefono}</p>
                   </div>
                 )}
                 <p><strong>Medio:</strong> {r.medio === 'Otro' && r.otro_medio ? r.otro_medio : r.medio}</p>
