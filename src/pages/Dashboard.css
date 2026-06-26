@@ -325,18 +325,157 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
   color: var(--ios-text);
 }
 
-.no-records {
+.no-records-card {
   text-align: center;
   color: var(--ios-text-secondary);
-  margin-top: 40px;
+  margin-top: 20px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
+
+.ios-subtitle {
+  font-size: 15px;
+  color: var(--ios-text-secondary);
+  padding-left: 16px;
+  margin-top: -16px;
+  margin-bottom: 20px;
+  text-transform: capitalize;
+}
+
+/* ── Premium iPadOS Record Card v2 ── */
+.record-card-v2 {
+  padding: 0;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.rc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 0.5px solid var(--ios-border);
+}
+
+.rc-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rc-solicitud-badge {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ios-blue);
+  background: rgba(0,122,255,0.12);
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.rc-date {
+  font-size: 13px;
+  color: var(--ios-text-secondary);
+}
+
+.rc-solicitante-chip {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+}
+
+.rc-contact-block {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-bottom: 0.5px solid var(--ios-border);
+  background: var(--dynamic-bg);
+}
+
+.rc-contact-icon {
+  font-size: 26px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ios-surface);
+  border-radius: 12px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.rc-contact-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--ios-text);
+  margin-bottom: 2px;
+}
+
+.rc-contact-detail {
+  font-size: 13px;
+  color: var(--ios-text-secondary);
+}
+
+.rc-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 18px;
+  border-bottom: 0.5px solid var(--ios-border);
+}
+
+.rc-tag {
+  font-size: 13px;
+  background: var(--dynamic-bg);
+  border: 0.5px solid var(--ios-border);
+  color: var(--ios-text);
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+
+.rc-text-section {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.rc-text-block {
+  padding: 10px 0;
+}
+
+.rc-text-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--ios-text-secondary);
+  margin-bottom: 6px;
+}
+
+.rc-text-content {
+  font-size: 15px;
+  color: var(--ios-text);
+  line-height: 1.5;
+}
+
+.rc-divider {
+  height: 0.5px;
+  background: var(--ios-border);
+}
+
 .record-card {
   padding: 20px;
   border-radius: 20px;
   margin-bottom: 16px;
-  background: var(--ios-surface);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
 }
+
 .record-header {
   display: flex;
   justify-content: space-between;

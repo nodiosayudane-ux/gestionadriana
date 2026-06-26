@@ -428,10 +428,21 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
   const renderRecords = (timeframe) => {
     const filtered = filterRecords(timeframe);
     const titles = { daily: 'Reporte Diario', weekly: 'Reporte Semanal', monthly: 'Reporte Mensual' };
+    const subtitles = {
+      daily: selectedDate ? new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-CO', {weekday:'long', year:'numeric', month:'long', day:'numeric'}) : '',
+      weekly: 'Últimos 7 días',
+      monthly: selectedMonth ? new Date(selectedMonth + '-01T12:00:00').toLocaleDateString('es-CO', {year:'numeric', month:'long'}) : ''
+    };
+
+    const solicitanteBadgeColor = (s) => {
+      const map = { EPS:'#34C759', Particular:'#FF9500', Institucional:'#AF52DE', Gobernación:'#FF3B30', Dirección:'#007AFF' };
+      return map[s] || '#8E8E93';
+    };
     
     return (
       <div className="records-list">
         <h2 className="ios-large-title">{titles[timeframe]}</h2>
+        <p className="ios-subtitle">{subtitles[timeframe]}</p>
         
         <CustomCalendar 
           mode={timeframe} 
@@ -443,66 +454,92 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
 
         <h3 className="section-subtitle">Detalle de Gestiones</h3>
         {filtered.length === 0 ? (
-          <p className="no-records">No hay registros en este periodo.</p>
+          <div className="no-records-card glass">
+            <span style={{fontSize:'40px'}}>📋</span>
+            <p>No hay gestiones en este periodo.</p>
+          </div>
         ) : (
           filtered.map(r => (
-            <div key={r.id} className="record-card glass">
-              <div className="record-header">
-                <span className="badge">{r.solicitud}</span>
-                <span className="date">{new Date(r.created_at).toLocaleDateString()}</span>
+            <div key={r.id} className="record-card-v2 glass">
+
+              {/* ── Cabecera ── */}
+              <div className="rc-header">
+                <div className="rc-header-left">
+                  <span className="rc-solicitud-badge">{r.solicitud}</span>
+                  <span className="rc-date">{new Date(r.created_at).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})}</span>
+                </div>
+                <span className="rc-solicitante-chip" style={{backgroundColor: solicitanteBadgeColor(r.solicitante) + '20', color: solicitanteBadgeColor(r.solicitante), border: `1px solid ${solicitanteBadgeColor(r.solicitante)}40`}}>
+                  {r.solicitante}
+                </span>
               </div>
-              <div className="record-body">
-                <p><strong>Solicitante:</strong> {r.solicitante}</p>
-                {r.solicitante === 'Particular' && r.particular_nombre && (
-                  <div className="particular-data-card">
-                    <p><strong>Paciente:</strong> {r.particular_nombre}</p>
-                    <p><strong>Documento:</strong> {r.particular_tipo_doc} {r.particular_numero_doc}</p>
-                    <p><strong>Teléfono:</strong> {r.particular_telefono}</p>
-                  </div>
-                )}
-                {r.solicitante === 'EPS' && r.eps_nombre && (
-                  <div className="particular-data-card">
-                    <p><strong>EPS:</strong> {r.eps_nombre}</p>
-                    <p><strong>Contacto:</strong> {r.eps_contacto}</p>
-                    <p><strong>Teléfono:</strong> {r.eps_telefono}</p>
-                  </div>
-                )}
-                {r.solicitante === 'Institucional' && r.inst_nombre && (
-                  <div className="particular-data-card">
-                    <p><strong>Institución:</strong> {r.inst_nombre}</p>
-                    <p><strong>Dependencia:</strong> {r.inst_dependencia}</p>
-                    <p><strong>Contacto:</strong> {r.inst_contacto}</p>
-                  </div>
-                )}
-                {r.solicitante === 'Gobernación' && r.gob_secretaria && (
-                  <div className="particular-data-card">
-                    <p><strong>Secretaría:</strong> {r.gob_secretaria}</p>
-                    <p><strong>Funcionario:</strong> {r.gob_funcionario}</p>
-                    <p><strong>Teléfono:</strong> {r.gob_telefono}</p>
-                  </div>
-                )}
-                <p><strong>Medio:</strong> {r.medio === 'Otro' && r.otro_medio ? r.otro_medio : r.medio}</p>
-                {r.fecha_cita && <p><strong>Fecha de Cita:</strong> {r.fecha_cita}</p>}
-                {r.especialidad && <p><strong>Especialidad:</strong> {r.especialidad}</p>}
-                {r.institucion && <p><strong>Institución:</strong> {r.institucion}</p>}
-                {r.eps_asociada && <p><strong>EPS:</strong> {r.eps_asociada}</p>}
-                <div className="record-text-blocks">
-                  <div className="text-block">
-                    <strong>Descripción:</strong>
-                    <p>{r.descripcion}</p>
-                  </div>
-                  <div className="text-block">
-                    <strong>Gestión:</strong>
-                    <p>{r.gestion_realizada}</p>
+
+              {/* ── Datos del contacto (según solicitante) ── */}
+              {r.solicitante === 'Particular' && r.particular_nombre && (
+                <div className="rc-contact-block">
+                  <div className="rc-contact-icon">👤</div>
+                  <div>
+                    <p className="rc-contact-name">{r.particular_nombre}</p>
+                    <p className="rc-contact-detail">{r.particular_tipo_doc} {r.particular_numero_doc} &nbsp;·&nbsp; 📞 {r.particular_telefono}</p>
                   </div>
                 </div>
+              )}
+              {r.solicitante === 'EPS' && r.eps_nombre && (
+                <div className="rc-contact-block">
+                  <div className="rc-contact-icon">🏥</div>
+                  <div>
+                    <p className="rc-contact-name">{r.eps_nombre}</p>
+                    <p className="rc-contact-detail">Contacto: {r.eps_contacto} &nbsp;·&nbsp; 📞 {r.eps_telefono}</p>
+                  </div>
+                </div>
+              )}
+              {r.solicitante === 'Institucional' && r.inst_nombre && (
+                <div className="rc-contact-block">
+                  <div className="rc-contact-icon">🏛️</div>
+                  <div>
+                    <p className="rc-contact-name">{r.inst_nombre}</p>
+                    <p className="rc-contact-detail">{r.inst_dependencia} &nbsp;·&nbsp; {r.inst_contacto}</p>
+                  </div>
+                </div>
+              )}
+              {r.solicitante === 'Gobernación' && r.gob_secretaria && (
+                <div className="rc-contact-block">
+                  <div className="rc-contact-icon">🏢</div>
+                  <div>
+                    <p className="rc-contact-name">{r.gob_secretaria}</p>
+                    <p className="rc-contact-detail">{r.gob_funcionario} &nbsp;·&nbsp; 📞 {r.gob_telefono}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* ── Medio y detalles de cita ── */}
+              <div className="rc-tags-row">
+                <span className="rc-tag">📡 {r.medio === 'Otro' && r.otro_medio ? r.otro_medio : r.medio}</span>
+                {r.fecha_cita && <span className="rc-tag">📅 {r.fecha_cita}</span>}
+                {r.especialidad && <span className="rc-tag">🩺 {r.especialidad}</span>}
+                {r.eps_asociada && !r.eps_nombre && <span className="rc-tag">💊 {r.eps_asociada}</span>}
+                {r.institucion && !r.inst_nombre && <span className="rc-tag">🏥 {r.institucion}</span>}
               </div>
+
+              {/* ── Descripción y Gestión ── */}
+              <div className="rc-text-section">
+                <div className="rc-text-block">
+                  <p className="rc-text-label">Descripción</p>
+                  <p className="rc-text-content">{r.descripcion}</p>
+                </div>
+                <div className="rc-divider" />
+                <div className="rc-text-block">
+                  <p className="rc-text-label">Gestión Realizada</p>
+                  <p className="rc-text-content">{r.gestion_realizada}</p>
+                </div>
+              </div>
+
             </div>
           ))
         )}
       </div>
     );
   };
+
 
   return (
     <div className="dashboard-container">
