@@ -1,6 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Las llaves públicas de Supabase son seguras de colocar aquí
+// porque nuestra base de datos ya está protegida por políticas (RLS) en el servidor.
+const supabaseUrl = 'https://pshvlwynozetdgwzkzio.supabase.co';
+const supabaseAnonKey = 'sb_publishable_yphfz9MDyeaxFhA1kDCdHA_JO8TSv8o';
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
