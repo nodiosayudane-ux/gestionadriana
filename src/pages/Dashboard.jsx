@@ -22,7 +22,10 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
   const [gestion, setGestion] = useState('');
   
   // Dynamic fields state
-  const [nombreParticular, setNombreParticular] = useState('');
+  const [particularNombre, setParticularNombre] = useState('');
+  const [particularTipoDoc, setParticularTipoDoc] = useState('');
+  const [particularNumeroDoc, setParticularNumeroDoc] = useState('');
+  const [particularTelefono, setParticularTelefono] = useState('');
   const [fechaCita, setFechaCita] = useState('');
   const [especialidad, setEspecialidad] = useState('');
   const [institucion, setInstitucion] = useState('');
@@ -67,7 +70,12 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       ...(solicitud === 'Referencia y Contrarreferencia' && { institucion }),
       ...(solicitud === 'Aseguramiento' && { eps_asociada: epsAsociada }),
       ...(medio === 'Otro' && { otro_medio: otroMedio }),
-      ...(solicitante === 'Particular' && { nombre_particular: nombreParticular })
+      ...(solicitante === 'Particular' && { 
+        particular_nombre: particularNombre,
+        particular_tipo_doc: particularTipoDoc,
+        particular_numero_doc: particularNumeroDoc,
+        particular_telefono: particularTelefono
+      })
     };
     
     try {
@@ -93,7 +101,10 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       setInstitucion('');
       setEpsAsociada('');
       setOtroMedio('');
-      setNombreParticular('');
+      setParticularNombre('');
+      setParticularTipoDoc('');
+      setParticularNumeroDoc('');
+      setParticularTelefono('');
       
       alert('Gestión guardada en la nube exitosamente');
     } catch (error) {
@@ -121,10 +132,36 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         </div>
 
         {solicitante === 'Particular' && (
-          <div className="ios-form-row dynamic-field">
-            <label>Datos del Particular</label>
-            <div className="ios-input-wrapper">
-              <input type="text" value={nombreParticular} onChange={e => setNombreParticular(e.target.value)} required placeholder="Nombre, doc..." className="ios-text-input" />
+          <div className="particular-fields-group">
+            <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos del Particular</h4>
+            <div className="ios-form-row dynamic-field">
+              <label>Nombre Completo</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={particularNombre} onChange={e => setParticularNombre(e.target.value)} required placeholder="Ej. Juan Pérez" className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
+              <label>Tipo Documento</label>
+              <div className="ios-input-wrapper">
+                <IosSelect 
+                  value={particularTipoDoc} 
+                  options={['CC', 'TI', 'CE', 'RC', 'Pasaporte']} 
+                  onChange={setParticularTipoDoc} 
+                  placeholder="Seleccionar..."
+                />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Número Documento</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={particularNumeroDoc} onChange={e => setParticularNumeroDoc(e.target.value)} required placeholder="Ej. 1020304050" className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Teléfono</label>
+              <div className="ios-input-wrapper">
+                <input type="tel" value={particularTelefono} onChange={e => setParticularTelefono(e.target.value)} required placeholder="Ej. 300 123 4567" className="ios-text-input" />
+              </div>
             </div>
           </div>
         )}
@@ -316,7 +353,13 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
               </div>
               <div className="record-body">
                 <p><strong>Solicitante:</strong> {r.solicitante}</p>
-                {r.nombre_particular && <p><strong>Datos Particular:</strong> {r.nombre_particular}</p>}
+                {r.solicitante === 'Particular' && r.particular_nombre && (
+                  <div className="particular-data-card">
+                    <p><strong>Paciente:</strong> {r.particular_nombre}</p>
+                    <p><strong>Documento:</strong> {r.particular_tipo_doc} {r.particular_numero_doc}</p>
+                    <p><strong>Teléfono:</strong> {r.particular_telefono}</p>
+                  </div>
+                )}
                 <p><strong>Medio:</strong> {r.medio === 'Otro' && r.otro_medio ? r.otro_medio : r.medio}</p>
                 {r.fecha_cita && <p><strong>Fecha de Cita:</strong> {r.fecha_cita}</p>}
                 {r.especialidad && <p><strong>Especialidad:</strong> {r.especialidad}</p>}

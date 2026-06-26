@@ -291,6 +291,26 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
   border-radius: 16px;
 }
 
+.particular-fields-group {
+  background: var(--dynamic-bg);
+  padding: 15px;
+  border-radius: 16px;
+  margin-top: 10px;
+  border: 1px solid var(--ios-border);
+}
+
+.particular-data-card {
+  background: var(--dynamic-bg);
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin: 10px 0;
+  border-left: 3px solid var(--ios-blue);
+}
+
+.particular-data-card p {
+  margin: 2px 0;
+}
+
 .stats-item-label {
   font-size: 14px;
   color: var(--ios-text-secondary);
