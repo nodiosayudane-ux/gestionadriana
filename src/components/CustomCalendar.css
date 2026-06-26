@@ -34,11 +34,16 @@
   background-color: rgba(0, 122, 255, 0.1);
 }
 
+.calendar-body {
+  max-width: 340px;
+  margin: 0 auto;
+}
+
 .days-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .day-name {
@@ -51,7 +56,8 @@
 .days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
+  row-gap: 12px;
+  column-gap: 4px;
 }
 
 .day-cell {
@@ -59,11 +65,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  color: var(--ios-text);
   border-radius: 50%;
   cursor: pointer;
   transition: all 0.2s;
+}
+
+.day-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 17px;
+  color: var(--ios-text);
 }
 
 .day-cell.empty {
@@ -74,11 +89,10 @@
   background-color: var(--dynamic-bg);
 }
 
-.day-cell.selected {
+.day-cell.selected .day-number {
   background-color: var(--ios-blue);
   color: white;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
 }
 
 .day-cell.highlighted {

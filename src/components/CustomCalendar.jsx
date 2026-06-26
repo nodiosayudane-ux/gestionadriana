@@ -45,26 +45,28 @@ export default function CustomCalendar({ selectedDate, selectedMonth, onDateChan
         <button onClick={handleNextMonth} className="nav-btn"><ChevronRight size={20} /></button>
       </div>
       
-      <div className="days-header">
-        {DAYS.map(d => <div key={d} className="day-name">{d}</div>)}
-      </div>
-      
-      <div className="days-grid">
-        {blanks.map((_, i) => <div key={`blank-${i}`} className="day-cell empty"></div>)}
-        {days.map(d => {
-          const dStr = `${year}-${String(currentMonthIdx + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-          const isSelected = selectedDate === dStr;
+      <div className="calendar-body">
+        <div className="days-header">
+          {DAYS.map(d => <div key={d} className="day-name">{d}</div>)}
+        </div>
+        
+        <div className="days-grid">
+          {blanks.map((_, i) => <div key={`blank-${i}`} className="day-cell empty"></div>)}
+          {days.map(d => {
+            const dStr = `${year}-${String(currentMonthIdx + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const isSelected = selectedDate === dStr;
 
-          return (
-            <div 
-              key={d} 
-              className={`day-cell ${isSelected ? 'selected' : ''}`}
-              onClick={() => handleDayClick(d)}
-            >
-              <div className="day-number">{d}</div>
-            </div>
-          );
-        })}
+            return (
+              <div 
+                key={d} 
+                className={`day-cell ${isSelected ? 'selected' : ''}`}
+                onClick={() => handleDayClick(d)}
+              >
+                <div className="day-number">{d}</div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

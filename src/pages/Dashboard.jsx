@@ -5,6 +5,7 @@ import CustomCalendar from '../components/CustomCalendar';
 import RecordCard from '../components/RecordCard';
 import WeeklySegmentedControl from '../components/WeeklySegmentedControl';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { DailyChart, WeeklyChart, MonthlyChart } from '../components/Charts';
 import './Dashboard.css';
 import './DailyView.css';
 
@@ -476,6 +477,9 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         </div>
         
         {renderStats(filtered)}
+        <div className="ios-inset-group" style={{padding: '0 16px 20px 16px'}}>
+          <DailyChart records={filtered} />
+        </div>
 
         <h3 className="section-subtitle">Detalle de Gestiones</h3>
         {filtered.length === 0 ? (
@@ -523,6 +527,22 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         />
         
         {renderStats(weeklyFiltered)}
+        
+        <div className="ios-inset-group" style={{padding: '0 16px 20px 16px'}}>
+          <WeeklyChart 
+            records={weeklyFiltered} 
+            weekDays={Array.from({length: 7}, (_, i) => {
+              const monday = new Date(selectedDate + 'T12:00:00');
+              const day = monday.getUTCDay();
+              const diff = monday.getUTCDate() - day + (day === 0 ? -6 : 1);
+              monday.setUTCDate(diff);
+              
+              const d = new Date(monday);
+              d.setUTCDate(d.getUTCDate() + i);
+              return d;
+            })}
+          />
+        </div>
 
         <h3 className="section-subtitle">Gestiones del {new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-CO', {weekday:'long'})}</h3>
         {filtered.length === 0 ? (
@@ -554,6 +574,14 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         />
         
         {renderStats(monthlyFiltered)}
+
+        <div className="ios-inset-group" style={{padding: '0 16px 20px 16px'}}>
+          <MonthlyChart 
+            records={monthlyFiltered} 
+            year={parseInt(selectedMonth.split('-')[0])}
+            month={parseInt(selectedMonth.split('-')[1]) - 1}
+          />
+        </div>
 
         <h3 className="section-subtitle">{selectedDate.startsWith(selectedMonth) ? `Gestiones del ${new Date(selectedDate + 'T12:00:00').getDate()}` : 'Selecciona un día'}</h3>
         {filtered.length === 0 ? (
