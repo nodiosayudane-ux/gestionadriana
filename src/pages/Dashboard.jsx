@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
-import { PlusCircle, List, Calendar } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { PlusCircle, List, Calendar, Download } from 'lucide-react';
 import IosSelect from '../components/IosSelect';
 import CustomCalendar from '../components/CustomCalendar';
 import RecordCard from '../components/RecordCard';
 import WeeklySegmentedControl from '../components/WeeklySegmentedControl';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DailyChart, WeeklyChart, MonthlyChart } from '../components/Charts';
+import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
 import './Dashboard.css';
 import './DailyView.css';
 
@@ -52,10 +54,28 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
   const [epsAsociada, setEpsAsociada] = useState('');
   const [otroMedio, setOtroMedio] = useState('');
 
+  const reportRef = useRef(null);
+
   // Fetch records from Supabase on mount
   useEffect(() => {
     fetchRecords();
   }, []);
+
+  const exportToPDF = async (filename) => {
+    if (!reportRef.current) return;
+    try {
+      const canvas = await html2canvas(reportRef.current, { scale: 2, backgroundColor: theme === 'dark' ? '#000000' : '#F2F2F7' });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`${filename}.pdf`);
+    } catch (err) {
+      console.error('Error generando PDF:', err);
+      alert('Hubo un error al generar el PDF.');
+    }
+  };
 
   const fetchRecords = async () => {
     try {
@@ -468,10 +488,15 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
     const subtitle = selectedDate ? new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-CO', {weekday:'long', year:'numeric', month:'long', day:'numeric'}) : '';
     
     return (
-      <div className="records-list">
-        <h2 className="ios-large-title">Reporte Diario</h2>
+      <div className="records-list" ref={reportRef}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 className="ios-large-title" style={{marginBottom: 0}}>Reporte Diario</h2>
+          <button onClick={() => exportToPDF(`Reporte_Diario_${selectedDate}`)} className="pdf-export-btn" title="Descargar PDF">
+            <Download size={22} />
+          </button>
+        </div>
         
-        <div className="daily-header-nav">
+        <div className="daily-header-nav" style={{marginTop: '24px'}}>
           <button onClick={() => changeDailyDate(-1)} className="daily-nav-btn"><ChevronLeft size={24} /></button>
           <span className="daily-subtitle">{subtitle}</span>
           <button onClick={() => changeDailyDate(1)} className="daily-nav-btn"><ChevronRight size={24} /></button>
@@ -520,10 +545,15 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
     });
 
     return (
-      <div className="records-list">
-        <h2 className="ios-large-title">Reporte Semanal</h2>
+      <div className="records-list" ref={reportRef}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <h2 className="ios-large-title" style={{marginBottom: 0}}>Reporte Semanal</h2>
+          <button onClick={() => exportToPDF(`Reporte_Semanal_${selectedDate}`)} className="pdf-export-btn" title="Descargar PDF">
+            <Download size={22} />
+          </button>
+        </div>
         
-        <WeeklySegmentedControl 
+        <WeeklySegmentedControl  
           selectedDate={selectedDate} 
           onDateChange={setSelectedDate} 
         />
@@ -565,8 +595,13 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
     const monthlyFiltered = filterRecords('monthly');
 
     return (
-      <div className="records-list">
-        <h2 className="ios-large-title">Reporte Mensual</h2>
+      <div className="records-list" ref={reportRef}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <h2 className="ios-large-title" style={{marginBottom: 0}}>Reporte Mensual</h2>
+          <button onClick={() => exportToPDF(`Reporte_Mensual_${selectedMonth}`)} className="pdf-export-btn" title="Descargar PDF">
+            <Download size={22} />
+          </button>
+        </div>
         
         <CustomCalendar 
           selectedDate={selectedDate} 

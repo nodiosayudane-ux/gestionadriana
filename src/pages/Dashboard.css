@@ -281,6 +281,31 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
   border-bottom: none;
 }
 
+.pdf-export-btn {
+  background-color: var(--ios-blue);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+  transition: transform 0.2s, opacity 0.2s;
+  margin-right: 16px;
+}
+
+.pdf-export-btn:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
+}
+
+.pdf-export-btn:active {
+  transform: scale(0.95);
+}
+
 .ios-inset-label {
   font-size: 17px;
   color: var(--ios-text);
