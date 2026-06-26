@@ -55,6 +55,30 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
   const [epsAsociada, setEpsAsociada] = useState('');
   const [otroMedio, setOtroMedio] = useState('');
 
+  // Dynamic fields for "Procedimientos"
+  const [procTipo, setProcTipo] = useState('');
+  const [procNombre, setProcNombre] = useState('');
+  const [procEspecialidad, setProcEspecialidad] = useState('');
+  const [procPrioridad, setProcPrioridad] = useState('');
+
+  // Dynamic fields for "Agendamiento"
+  const [agenTipoConsulta, setAgenTipoConsulta] = useState('');
+
+  // Dynamic fields for "Autorización"
+  const [autTipoServicio, setAutTipoServicio] = useState('');
+  const [autNumero, setAutNumero] = useState('');
+  const [autEstado, setAutEstado] = useState('');
+
+  // Dynamic fields for "Referencia y Contrarreferencia"
+  const [refTipoTraslado, setRefTipoTraslado] = useState('');
+  const [refIpsOrigen, setRefIpsOrigen] = useState('');
+  const [refIpsDestino, setRefIpsDestino] = useState('');
+  const [refDiagnostico, setRefDiagnostico] = useState('');
+
+  // Dynamic fields for "Aseguramiento"
+  const [asegTramite, setAsegTramite] = useState('');
+  const [asegRegimen, setAsegRegimen] = useState('');
+
   const reportRef = useRef(null);
 
   // Fetch records from Supabase on mount
@@ -172,11 +196,47 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
     }
     setLoading(true);
 
+    let finalDescripcion = descripcion;
+
+    if (solicitud === 'Procedimientos') {
+      finalDescripcion = `**Tipo:** ${procTipo}
+**Procedimiento:** ${procNombre}
+**Especialidad:** ${procEspecialidad}
+**Prioridad:** ${procPrioridad}
+
+${descripcion}`;
+    } else if (solicitud === 'Agendamiento') {
+      finalDescripcion = `**Consulta:** ${agenTipoConsulta}
+**Especialidad:** ${especialidad}
+**Fecha:** ${fechaCita}
+
+${descripcion}`;
+    } else if (solicitud === 'Autorización') {
+      finalDescripcion = `**Servicio:** ${autTipoServicio}
+**N° Autorización:** ${autNumero}
+**Estado:** ${autEstado}
+
+${descripcion}`;
+    } else if (solicitud === 'Referencia y Contrarreferencia') {
+      finalDescripcion = `**Traslado:** ${refTipoTraslado}
+**Origen:** ${refIpsOrigen}
+**Destino:** ${refIpsDestino}
+**Dx:** ${refDiagnostico}
+
+${descripcion}`;
+    } else if (solicitud === 'Aseguramiento') {
+      finalDescripcion = `**Trámite:** ${asegTramite}
+**Régimen:** ${asegRegimen}
+**EPS:** ${epsAsociada}
+
+${descripcion}`;
+    }
+
     const newRecord = {
       solicitante,
       solicitud,
       medio,
-      descripcion,
+      descripcion: finalDescripcion.trim(),
       gestion_realizada: gestion,
       // Save dynamic fields only if relevant
       ...(solicitud === 'Agendamiento' && { fecha_cita: fechaCita, especialidad }),
@@ -247,6 +307,22 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       setGobSecretaria('');
       setGobFuncionario('');
       setGobTelefono('');
+
+      // Reset dynamic fields
+      setProcTipo('');
+      setProcNombre('');
+      setProcEspecialidad('');
+      setProcPrioridad('');
+      setAgenTipoConsulta('');
+      setAutTipoServicio('');
+      setAutNumero('');
+      setAutEstado('');
+      setRefTipoTraslado('');
+      setRefIpsOrigen('');
+      setRefIpsDestino('');
+      setRefDiagnostico('');
+      setAsegTramite('');
+      setAsegRegimen('');
       
       setDirFuncionario('');
       setDirDependencia('');
@@ -414,37 +490,174 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         </div>
 
         {/* Conditional Fields based on Solicitud */}
+        {solicitud === 'Procedimientos' && (
+          <div className="particular-fields-group">
+            <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos Clínicos del Procedimiento</h4>
+            <div className="ios-form-row dynamic-field">
+              <label>Tipo</label>
+              <div className="ios-input-wrapper">
+                <select value={procTipo} onChange={e => setProcTipo(e.target.value)} required className="ios-text-input">
+                  <option value="">Seleccionar...</option>
+                  <option value="Quirúrgico">Quirúrgico</option>
+                  <option value="Diagnóstico">Diagnóstico</option>
+                  <option value="Terapéutico">Terapéutico</option>
+                </select>
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Procedimiento</label>
+              <div className="ios-input-wrapper">
+                <input type="text" placeholder="Ej. Endoscopia" value={procNombre} onChange={e => setProcNombre(e.target.value)} required className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Especialidad</label>
+              <div className="ios-input-wrapper">
+                <input type="text" placeholder="Ej. Gastroenterología" value={procEspecialidad} onChange={e => setProcEspecialidad(e.target.value)} required className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Prioridad</label>
+              <div className="ios-input-wrapper">
+                <select value={procPrioridad} onChange={e => setProcPrioridad(e.target.value)} required className="ios-text-input">
+                  <option value="">Seleccionar...</option>
+                  <option value="Urgencia">Urgencia</option>
+                  <option value="Prioritario">Prioritario</option>
+                  <option value="Electivo">Electivo</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+
         {solicitud === 'Agendamiento' && (
-          <>
+          <div className="particular-fields-group">
+            <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de la Cita</h4>
+            <div className="ios-form-row dynamic-field">
+              <label>Tipo Consulta</label>
+              <div className="ios-input-wrapper">
+                <select value={agenTipoConsulta} onChange={e => setAgenTipoConsulta(e.target.value)} required className="ios-text-input">
+                  <option value="">Seleccionar...</option>
+                  <option value="Primera Vez">Primera Vez</option>
+                  <option value="Control">Control</option>
+                  <option value="Lectura Exámenes">Lectura Exámenes</option>
+                </select>
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Especialidad</label>
+              <div className="ios-input-wrapper">
+                <input type="text" placeholder="Ej. Pediatría" value={especialidad} onChange={e => setEspecialidad(e.target.value)} required className="ios-text-input" />
+              </div>
+            </div>
             <div className="ios-form-row dynamic-field">
               <label>Fecha de Cita</label>
               <div className="ios-input-wrapper">
                 <input type="date" value={fechaCita} onChange={e => setFechaCita(e.target.value)} required className="ios-text-input" />
               </div>
             </div>
+          </div>
+        )}
+
+        {solicitud === 'Autorización' && (
+          <div className="particular-fields-group">
+            <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de la Autorización</h4>
             <div className="ios-form-row dynamic-field">
-              <label>Especialidad</label>
+              <label>Servicio</label>
               <div className="ios-input-wrapper">
-                <input type="text" placeholder="Ej: Pediatría" value={especialidad} onChange={e => setEspecialidad(e.target.value)} required className="ios-text-input" />
+                <select value={autTipoServicio} onChange={e => setAutTipoServicio(e.target.value)} required className="ios-text-input">
+                  <option value="">Seleccionar...</option>
+                  <option value="Medicamentos">Medicamentos</option>
+                  <option value="Insumos">Insumos</option>
+                  <option value="Cirugía/Procedimiento">Cirugía/Procedimiento</option>
+                </select>
               </div>
             </div>
-          </>
+            <div className="ios-form-row dynamic-field">
+              <label>N° Autorización</label>
+              <div className="ios-input-wrapper">
+                <input type="text" placeholder="MIPRES o Radicado" value={autNumero} onChange={e => setAutNumero(e.target.value)} className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Estado</label>
+              <div className="ios-input-wrapper">
+                <select value={autEstado} onChange={e => setAutEstado(e.target.value)} required className="ios-text-input">
+                  <option value="">Seleccionar...</option>
+                  <option value="Aprobada">Aprobada</option>
+                  <option value="En Trámite">En Trámite</option>
+                  <option value="Negada">Negada</option>
+                </select>
+              </div>
+            </div>
+          </div>
         )}
 
         {solicitud === 'Referencia y Contrarreferencia' && (
-          <div className="ios-form-row dynamic-field">
-            <label>Institución</label>
-            <div className="ios-input-wrapper">
-              <input type="text" placeholder="Destino u origen" value={institucion} onChange={e => setInstitucion(e.target.value)} required className="ios-text-input" />
+          <div className="particular-fields-group">
+            <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de Traslado / Referencia</h4>
+            <div className="ios-form-row dynamic-field">
+              <label>Tipo Traslado</label>
+              <div className="ios-input-wrapper">
+                <select value={refTipoTraslado} onChange={e => setRefTipoTraslado(e.target.value)} required className="ios-text-input">
+                  <option value="">Seleccionar...</option>
+                  <option value="Ambulancia Básica (TAB)">Ambulancia Básica (TAB)</option>
+                  <option value="Medicalizada (TAM)">Medicalizada (TAM)</option>
+                  <option value="Interconsulta">Interconsulta</option>
+                </select>
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>IPS Origen</label>
+              <div className="ios-input-wrapper">
+                <input type="text" placeholder="De dónde remiten" value={refIpsOrigen} onChange={e => setRefIpsOrigen(e.target.value)} required className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>IPS Destino</label>
+              <div className="ios-input-wrapper">
+                <input type="text" placeholder="Hacia dónde remiten" value={refIpsDestino} onChange={e => setRefIpsDestino(e.target.value)} required className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Diagnóstico (Dx)</label>
+              <div className="ios-input-wrapper">
+                <input type="text" placeholder="Ej. Apendicitis Aguda" value={refDiagnostico} onChange={e => setRefDiagnostico(e.target.value)} required className="ios-text-input" />
+              </div>
             </div>
           </div>
         )}
 
         {solicitud === 'Aseguramiento' && (
-          <div className="ios-form-row dynamic-field">
-            <label>EPS Asociada</label>
-            <div className="ios-input-wrapper">
-              <input type="text" placeholder="Nombre de EPS" value={epsAsociada} onChange={e => setEpsAsociada(e.target.value)} required className="ios-text-input" />
+          <div className="particular-fields-group">
+            <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Trámite de Aseguramiento</h4>
+            <div className="ios-form-row dynamic-field">
+              <label>Trámite</label>
+              <div className="ios-input-wrapper">
+                <select value={asegTramite} onChange={e => setAsegTramite(e.target.value)} required className="ios-text-input">
+                  <option value="">Seleccionar...</option>
+                  <option value="Nueva Afiliación">Nueva Afiliación</option>
+                  <option value="Traslado de EPS">Traslado de EPS</option>
+                  <option value="Desbloqueo">Desbloqueo</option>
+                </select>
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Régimen</label>
+              <div className="ios-input-wrapper">
+                <select value={asegRegimen} onChange={e => setAsegRegimen(e.target.value)} required className="ios-text-input">
+                  <option value="">Seleccionar...</option>
+                  <option value="Contributivo">Contributivo</option>
+                  <option value="Subsidiado">Subsidiado</option>
+                  <option value="Especial">Especial</option>
+                </select>
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>EPS Involucrada</label>
+              <div className="ios-input-wrapper">
+                <input type="text" placeholder="Ej. Nueva EPS" value={epsAsociada} onChange={e => setEpsAsociada(e.target.value)} required className="ios-text-input" />
+              </div>
             </div>
           </div>
         )}
