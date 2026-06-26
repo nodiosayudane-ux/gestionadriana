@@ -601,7 +601,18 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
 
   return (
     <div className="dashboard-container">
-      <header className="dashboard-header glass">
+      <header className="dashboard-header glass macos-pill">
+        <div className="macos-controls">
+          <span className="mac-btn close" onClick={onLogout} title="Cerrar sesión"></span>
+          <span className="mac-btn minimize"></span>
+          <span className="mac-btn maximize" onClick={() => {
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen().catch(e => console.log(e));
+            } else {
+              document.exitFullscreen();
+            }
+          }}></span>
+        </div>
         <h1>Gestión Dra. Adriana</h1>
         <div style={{ display: 'flex', gap: '12px' }}>
           <button onClick={toggleTheme} className="theme-toggle-btn">
