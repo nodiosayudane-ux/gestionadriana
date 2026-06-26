@@ -31,7 +31,7 @@ export default function IosSelect({ value, options, onChange, placeholder = "Sel
       </div>
       
       {isOpen && (
-        <div className="ios-select-menu glass">
+        <div className="ios-select-menu">
           {options.map((opt) => (
             <div 
               key={opt} 

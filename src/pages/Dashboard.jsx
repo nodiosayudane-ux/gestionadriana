@@ -22,6 +22,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
   const [gestion, setGestion] = useState('');
   
   // Dynamic fields state
+  const [nombreParticular, setNombreParticular] = useState('');
   const [fechaCita, setFechaCita] = useState('');
   const [especialidad, setEspecialidad] = useState('');
   const [institucion, setInstitucion] = useState('');
@@ -65,7 +66,8 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       ...(solicitud === 'Agendamiento' && { fecha_cita: fechaCita, especialidad }),
       ...(solicitud === 'Referencia y Contrarreferencia' && { institucion }),
       ...(solicitud === 'Aseguramiento' && { eps_asociada: epsAsociada }),
-      ...(medio === 'Otro' && { otro_medio: otroMedio })
+      ...(medio === 'Otro' && { otro_medio: otroMedio }),
+      ...(solicitante === 'Particular' && { nombre_particular: nombreParticular })
     };
     
     try {
@@ -91,6 +93,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       setInstitucion('');
       setEpsAsociada('');
       setOtroMedio('');
+      setNombreParticular('');
       
       alert('Gestión guardada en la nube exitosamente');
     } catch (error) {
@@ -116,6 +119,15 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
             />
           </div>
         </div>
+
+        {solicitante === 'Particular' && (
+          <div className="ios-form-row dynamic-field">
+            <label>Datos del Particular</label>
+            <div className="ios-input-wrapper">
+              <input type="text" value={nombreParticular} onChange={e => setNombreParticular(e.target.value)} required placeholder="Nombre, doc..." className="ios-text-input" />
+            </div>
+          </div>
+        )}
 
         <div className="ios-form-row" style={{ overflow: 'visible' }}>
           <label>Solicitud</label>
@@ -304,6 +316,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
               </div>
               <div className="record-body">
                 <p><strong>Solicitante:</strong> {r.solicitante}</p>
+                {r.nombre_particular && <p><strong>Datos Particular:</strong> {r.nombre_particular}</p>}
                 <p><strong>Medio:</strong> {r.medio === 'Otro' && r.otro_medio ? r.otro_medio : r.medio}</p>
                 {r.fecha_cita && <p><strong>Fecha de Cita:</strong> {r.fecha_cita}</p>}
                 {r.especialidad && <p><strong>Especialidad:</strong> {r.especialidad}</p>}
