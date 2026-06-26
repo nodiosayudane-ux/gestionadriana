@@ -412,18 +412,19 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
     return records.filter(r => {
       if (!r.created_at) return false;
       
-      const rDateStr = r.created_at.split('T')[0]; // YYYY-MM-DD
-      const rMonthStr = r.created_at.slice(0, 7);  // YYYY-MM
+      const recordDate = new Date(r.created_at);
+      const rDateStr = `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}-${String(recordDate.getDate()).padStart(2, '0')}`;
+      const rMonthStr = rDateStr.slice(0, 7);
 
       if (timeframe === 'daily') {
         return rDateStr === selectedDate;
       }
       if (timeframe === 'weekly') {
-        const targetDateObj = new Date(selectedDate);
-        const recordDateObj = new Date(rDateStr);
+        const targetDateObj = new Date(selectedDate + 'T12:00:00');
         // Mostrar los 7 días anteriores hasta la fecha seleccionada (inclusive)
-        const diffDays = (targetDateObj - recordDateObj) / (1000 * 60 * 60 * 24);
-        return diffDays >= 0 && diffDays < 7;
+        const diffDays = (targetDateObj.getTime() - recordDate.getTime()) / (1000 * 60 * 60 * 24);
+        // La diferencia de días es entre 0 y 6 para los 7 días
+        return diffDays >= -0.5 && diffDays < 7;
       }
       if (timeframe === 'monthly') {
         return rMonthStr === selectedMonth;
@@ -498,9 +499,10 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
     const filtered = filterRecords('daily'); // Muestra los detalles del día seleccionado dentro de la semana
     // Para las estadísticas, mostraremos todo el periodo semanal
     const weeklyFiltered = records.filter(r => {
-      if (!r.created_at) return false;
-      const targetDateObj = new Date(selectedDate);
-      const recordDateObj = new Date(r.created_at.split('T')[0]);
+      const targetDateObj = new Date(selectedDate + 'T12:00:00');
+      const recordDate = new Date(r.created_at);
+      const rDateStr = `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}-${String(recordDate.getDate()).padStart(2, '0')}`;
+      const recordDateObj = new Date(rDateStr + 'T12:00:00');
       
       const getMonday = (d) => {
         const date = new Date(d);

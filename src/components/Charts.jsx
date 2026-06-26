@@ -77,7 +77,12 @@ export const WeeklyChart = ({ records, weekDays }) => {
   const data = weekDays.map(dateObj => {
     const dStr = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
     const dayName = dateObj.toLocaleDateString('es-ES', { weekday: 'short' });
-    const count = records.filter(r => r.fecha_creacion && r.fecha_creacion.startsWith(dStr)).length;
+    const count = records.filter(r => {
+      if (!r.created_at) return false;
+      const recordDate = new Date(r.created_at);
+      const rDateStr = `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}-${String(recordDate.getDate()).padStart(2, '0')}`;
+      return rDateStr === dStr;
+    }).length;
     return { name: dayName, Gestiones: count };
   });
 
@@ -107,7 +112,12 @@ export const MonthlyChart = ({ records, month, year }) => {
 
   for (let i = 1; i <= daysInMonth; i++) {
     const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-    const count = records.filter(r => r.fecha_creacion && r.fecha_creacion.startsWith(dStr)).length;
+    const count = records.filter(r => {
+      if (!r.created_at) return false;
+      const recordDate = new Date(r.created_at);
+      const rDateStr = `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}-${String(recordDate.getDate()).padStart(2, '0')}`;
+      return rDateStr === dStr;
+    }).length;
     data.push({ name: String(i), Gestiones: count });
   }
 
