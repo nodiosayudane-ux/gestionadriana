@@ -87,6 +87,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         particular_tipo_doc: particularTipoDoc,
         particular_numero_doc: particularNumeroDoc,
         particular_telefono: particularTelefono
+      }),
       ...(solicitante === 'EPS' && { 
         eps_nombre: epsAsociada, // Reusing epsAsociada for EPS name if they select EPS in solicitante
         eps_contacto: epsContacto,
