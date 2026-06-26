@@ -2,7 +2,11 @@ import { useState, useEffect } from 'react';
 import { PlusCircle, Calendar, List, LogOut, Moon, Sun } from 'lucide-react';
 import IosSelect from '../components/IosSelect';
 import CustomCalendar from '../components/CustomCalendar';
+import RecordCard from '../components/RecordCard';
+import WeeklySegmentedControl from '../components/WeeklySegmentedControl';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import './Dashboard.css';
+import './DailyView.css';
 
 import { supabase } from '../supabaseClient';
 
@@ -425,116 +429,114 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
     );
   };
 
-  const renderRecords = (timeframe) => {
-    const filtered = filterRecords(timeframe);
-    const titles = { daily: 'Reporte Diario', weekly: 'Reporte Semanal', monthly: 'Reporte Mensual' };
-    const subtitles = {
-      daily: selectedDate ? new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-CO', {weekday:'long', year:'numeric', month:'long', day:'numeric'}) : '',
-      weekly: 'Últimos 7 días',
-      monthly: selectedMonth ? new Date(selectedMonth + '-01T12:00:00').toLocaleDateString('es-CO', {year:'numeric', month:'long'}) : ''
-    };
+  const changeDailyDate = (offset) => {
+    const d = new Date(selectedDate + 'T12:00:00');
+    d.setUTCDate(d.getUTCDate() + offset);
+    setSelectedDate(d.toISOString().split('T')[0]);
+  };
 
-    const solicitanteBadgeColor = (s) => {
-      const map = { EPS:'#34C759', Particular:'#FF9500', Institucional:'#AF52DE', Gobernación:'#FF3B30', Dirección:'#007AFF' };
-      return map[s] || '#8E8E93';
-    };
+  const renderDailyView = () => {
+    const filtered = filterRecords('daily');
+    const subtitle = selectedDate ? new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-CO', {weekday:'long', year:'numeric', month:'long', day:'numeric'}) : '';
     
     return (
       <div className="records-list">
-        <h2 className="ios-large-title">{titles[timeframe]}</h2>
-        <p className="ios-subtitle">{subtitles[timeframe]}</p>
+        <h2 className="ios-large-title">Reporte Diario</h2>
         
-        <CustomCalendar 
-          mode={timeframe} 
-          selectedDate={timeframe === 'monthly' ? selectedMonth : selectedDate} 
-          onDateChange={timeframe === 'monthly' ? setSelectedMonth : setSelectedDate} 
-        />
+        <div className="daily-header-nav">
+          <button onClick={() => changeDailyDate(-1)} className="daily-nav-btn"><ChevronLeft size={24} /></button>
+          <span className="daily-subtitle">{subtitle}</span>
+          <button onClick={() => changeDailyDate(1)} className="daily-nav-btn"><ChevronRight size={24} /></button>
+        </div>
         
         {renderStats(filtered)}
 
         <h3 className="section-subtitle">Detalle de Gestiones</h3>
         {filtered.length === 0 ? (
-          <div className="no-records-card glass">
+          <div className="no-records-card">
             <span style={{fontSize:'40px'}}>📋</span>
-            <p>No hay gestiones en este periodo.</p>
+            <p>No hay gestiones este día.</p>
           </div>
         ) : (
-          filtered.map(r => (
-            <div key={r.id} className="record-card-v2 glass">
+          filtered.map(r => <RecordCard key={r.id} record={r} />)
+        )}
+      </div>
+    );
+  };
 
-              {/* ── Cabecera ── */}
-              <div className="rc-header">
-                <div className="rc-header-left">
-                  <span className="rc-solicitud-badge">{r.solicitud}</span>
-                  <span className="rc-date">{new Date(r.created_at).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})}</span>
-                </div>
-                <span className="rc-solicitante-chip" style={{backgroundColor: solicitanteBadgeColor(r.solicitante) + '20', color: solicitanteBadgeColor(r.solicitante), border: `1px solid ${solicitanteBadgeColor(r.solicitante)}40`}}>
-                  {r.solicitante}
-                </span>
-              </div>
+  const renderWeeklyView = () => {
+    const filtered = filterRecords('daily'); // Muestra los detalles del día seleccionado dentro de la semana
+    // Para las estadísticas, mostraremos todo el periodo semanal
+    const weeklyFiltered = records.filter(r => {
+      if (!r.created_at) return false;
+      const targetDateObj = new Date(selectedDate);
+      const recordDateObj = new Date(r.created_at.split('T')[0]);
+      
+      const getMonday = (d) => {
+        const date = new Date(d);
+        date.setUTCHours(12, 0, 0, 0);
+        const day = date.getUTCDay();
+        const diff = date.getUTCDate() - day + (day === 0 ? -6 : 1);
+        return new Date(date.setUTCDate(diff));
+      };
+      
+      const monday = getMonday(targetDateObj);
+      const sunday = new Date(monday);
+      sunday.setUTCDate(sunday.getUTCDate() + 6);
+      
+      return recordDateObj >= monday && recordDateObj <= sunday;
+    });
 
-              {/* ── Datos del contacto (según solicitante) ── */}
-              {r.solicitante === 'Particular' && r.particular_nombre && (
-                <div className="rc-contact-block">
-                  <div className="rc-contact-icon">👤</div>
-                  <div>
-                    <p className="rc-contact-name">{r.particular_nombre}</p>
-                    <p className="rc-contact-detail">{r.particular_tipo_doc} {r.particular_numero_doc} &nbsp;·&nbsp; 📞 {r.particular_telefono}</p>
-                  </div>
-                </div>
-              )}
-              {r.solicitante === 'EPS' && r.eps_nombre && (
-                <div className="rc-contact-block">
-                  <div className="rc-contact-icon">🏥</div>
-                  <div>
-                    <p className="rc-contact-name">{r.eps_nombre}</p>
-                    <p className="rc-contact-detail">Contacto: {r.eps_contacto} &nbsp;·&nbsp; 📞 {r.eps_telefono}</p>
-                  </div>
-                </div>
-              )}
-              {r.solicitante === 'Institucional' && r.inst_nombre && (
-                <div className="rc-contact-block">
-                  <div className="rc-contact-icon">🏛️</div>
-                  <div>
-                    <p className="rc-contact-name">{r.inst_nombre}</p>
-                    <p className="rc-contact-detail">{r.inst_dependencia} &nbsp;·&nbsp; {r.inst_contacto}</p>
-                  </div>
-                </div>
-              )}
-              {r.solicitante === 'Gobernación' && r.gob_secretaria && (
-                <div className="rc-contact-block">
-                  <div className="rc-contact-icon">🏢</div>
-                  <div>
-                    <p className="rc-contact-name">{r.gob_secretaria}</p>
-                    <p className="rc-contact-detail">{r.gob_funcionario} &nbsp;·&nbsp; 📞 {r.gob_telefono}</p>
-                  </div>
-                </div>
-              )}
+    return (
+      <div className="records-list">
+        <h2 className="ios-large-title">Reporte Semanal</h2>
+        
+        <WeeklySegmentedControl 
+          selectedDate={selectedDate} 
+          onDateChange={setSelectedDate} 
+        />
+        
+        {renderStats(weeklyFiltered)}
 
-              {/* ── Medio y detalles de cita ── */}
-              <div className="rc-tags-row">
-                <span className="rc-tag">📡 {r.medio === 'Otro' && r.otro_medio ? r.otro_medio : r.medio}</span>
-                {r.fecha_cita && <span className="rc-tag">📅 {r.fecha_cita}</span>}
-                {r.especialidad && <span className="rc-tag">🩺 {r.especialidad}</span>}
-                {r.eps_asociada && !r.eps_nombre && <span className="rc-tag">💊 {r.eps_asociada}</span>}
-                {r.institucion && !r.inst_nombre && <span className="rc-tag">🏥 {r.institucion}</span>}
-              </div>
+        <h3 className="section-subtitle">Gestiones del {new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-CO', {weekday:'long'})}</h3>
+        {filtered.length === 0 ? (
+          <div className="no-records-card">
+            <span style={{fontSize:'40px'}}>📋</span>
+            <p>No hay gestiones este día.</p>
+          </div>
+        ) : (
+          filtered.map(r => <RecordCard key={r.id} record={r} />)
+        )}
+      </div>
+    );
+  };
 
-              {/* ── Descripción y Gestión ── */}
-              <div className="rc-text-section">
-                <div className="rc-text-block">
-                  <p className="rc-text-label">Descripción</p>
-                  <p className="rc-text-content">{r.descripcion}</p>
-                </div>
-                <div className="rc-divider" />
-                <div className="rc-text-block">
-                  <p className="rc-text-label">Gestión Realizada</p>
-                  <p className="rc-text-content">{r.gestion_realizada}</p>
-                </div>
-              </div>
+  const renderMonthlyView = () => {
+    // Al tocar un día en el mes, filtramos por ese día específico
+    const filtered = selectedDate.startsWith(selectedMonth) ? filterRecords('daily') : [];
+    const monthlyFiltered = filterRecords('monthly');
 
-            </div>
-          ))
+    return (
+      <div className="records-list">
+        <h2 className="ios-large-title">Reporte Mensual</h2>
+        
+        <CustomCalendar 
+          selectedDate={selectedDate} 
+          selectedMonth={selectedMonth}
+          onDateChange={setSelectedDate} 
+          onMonthChange={setSelectedMonth}
+        />
+        
+        {renderStats(monthlyFiltered)}
+
+        <h3 className="section-subtitle">{selectedDate.startsWith(selectedMonth) ? `Gestiones del ${new Date(selectedDate + 'T12:00:00').getDate()}` : 'Selecciona un día'}</h3>
+        {filtered.length === 0 ? (
+          <div className="no-records-card">
+            <span style={{fontSize:'40px'}}>📋</span>
+            <p>No hay gestiones este día.</p>
+          </div>
+        ) : (
+          filtered.map(r => <RecordCard key={r.id} record={r} />)
         )}
       </div>
     );
@@ -557,9 +559,9 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
 
       <main className="dashboard-content">
         {activeTab === 'form' && renderForm()}
-        {activeTab === 'daily' && renderRecords('daily')}
-        {activeTab === 'weekly' && renderRecords('weekly')}
-        {activeTab === 'monthly' && renderRecords('monthly')}
+        {activeTab === 'daily' && renderDailyView()}
+        {activeTab === 'weekly' && renderWeeklyView()}
+        {activeTab === 'monthly' && renderMonthlyView()}
       </main>
 
       <nav className="bottom-nav">
