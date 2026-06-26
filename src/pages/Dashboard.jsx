@@ -42,6 +42,9 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
   const [gobFuncionario, setGobFuncionario] = useState('');
   const [gobTelefono, setGobTelefono] = useState('');
 
+  const [dirFuncionario, setDirFuncionario] = useState('');
+  const [dirDependencia, setDirDependencia] = useState('');
+
   const [fechaCita, setFechaCita] = useState('');
   const [especialidad, setEspecialidad] = useState('');
   const [institucion, setInstitucion] = useState('');
@@ -106,6 +109,10 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         gob_secretaria: gobSecretaria,
         gob_funcionario: gobFuncionario,
         gob_telefono: gobTelefono
+      }),
+      ...(solicitante === 'Dirección' && {
+        dir_funcionario: dirFuncionario,
+        dir_dependencia: dirDependencia
       })
     };
     
@@ -146,6 +153,9 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       setGobSecretaria('');
       setGobFuncionario('');
       setGobTelefono('');
+      
+      setDirFuncionario('');
+      setDirDependencia('');
       
       alert('Gestión guardada en la nube exitosamente');
     } catch (error) {
@@ -274,6 +284,24 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
               <label>Teléfono</label>
               <div className="ios-input-wrapper">
                 <input type="text" value={gobTelefono} onChange={e => setGobTelefono(e.target.value)} required placeholder="Ej. 300..." className="ios-text-input" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {solicitante === 'Dirección' && (
+          <div className="particular-fields-group">
+            <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de la Dirección</h4>
+            <div className="ios-form-row dynamic-field">
+              <label>Funcionario/Médico</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={dirFuncionario} onChange={e => setDirFuncionario(e.target.value)} required placeholder="Ej. Dra. Martínez" className="ios-text-input" />
+              </div>
+            </div>
+            <div className="ios-form-row dynamic-field">
+              <label>Dependencia/Área</label>
+              <div className="ios-input-wrapper">
+                <input type="text" value={dirDependencia} onChange={e => setDirDependencia(e.target.value)} required placeholder="Ej. Gerencia, Auditoría" className="ios-text-input" />
               </div>
             </div>
           </div>

@@ -56,6 +56,15 @@ const RecordCard = ({ record: r }) => {
           </div>
         </div>
       )}
+      {r.solicitante === 'Dirección' && r.dir_funcionario && (
+        <div className="rc-contact-block">
+          <div className="rc-contact-icon">👩‍⚕️</div>
+          <div>
+            <p className="rc-contact-name">{r.dir_funcionario}</p>
+            <p className="rc-contact-detail">{r.dir_dependencia}</p>
+          </div>
+        </div>
+      )}
 
       {/* ── Medio y detalles de cita ── */}
       <div className="rc-tags-row">
