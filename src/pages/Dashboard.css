@@ -379,116 +379,125 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
 
 /* ── Premium iPadOS Record Card v2 ── */
 .record-card-v2 {
-  padding: 0;
-  border-radius: 24px;
+  padding: 16px;
+  border-radius: 28px;
   margin-bottom: 0;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   background-color: var(--ios-surface);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-  border: 1px solid var(--glass-border);
-  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s;
+  background-image: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.1);
+  border: 1px solid rgba(120, 120, 128, 0.1);
+  transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s;
 }
 
 .record-card-v2:hover {
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.08);
 }
 
 .rc-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 18px;
-  border-bottom: 0.5px solid var(--ios-border);
+  /* Removed border-bottom for a cleaner look */
 }
 
 .rc-header-left {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
 }
 
 .rc-solicitud-badge {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   color: var(--ios-blue);
-  background: rgba(0,122,255,0.12);
-  padding: 4px 10px;
-  border-radius: 8px;
+  /* no background to make it look like a pure title */
+  letter-spacing: -0.3px;
 }
 
 .rc-date {
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--ios-text-secondary);
 }
 
 .rc-solicitante-chip {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  /* El background se inyecta por estilo en el componente */
 }
 
 .rc-contact-block {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px 18px;
-  border-bottom: 0.5px solid var(--ios-border);
-  background: var(--dynamic-bg);
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: rgba(120, 120, 128, 0.05); /* very subtle gray background instead of borders */
 }
 
 .rc-contact-icon {
-  font-size: 26px;
-  width: 42px;
-  height: 42px;
+  font-size: 22px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--ios-surface);
   border-radius: 12px;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .rc-contact-name {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--ios-text);
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .rc-contact-detail {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--ios-text-secondary);
 }
 
 .rc-tags-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  padding: 12px 18px;
-  border-bottom: 0.5px solid var(--ios-border);
+  gap: 6px;
+  /* Removed borders and padding, using gap of flex */
 }
 
 .rc-tag {
-  font-size: 13px;
-  background: var(--dynamic-bg);
-  border: 0.5px solid var(--ios-border);
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(120, 120, 128, 0.08);
   color: var(--ios-text);
-  padding: 4px 10px;
-  border-radius: 10px;
+  padding: 6px 12px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .rc-text-section {
-  padding: 16px 18px;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 8px;
 }
 
 .rc-text-block {
-  padding: 10px 0;
+  background: rgba(120, 120, 128, 0.03);
+  padding: 12px 14px;
+  border-radius: 16px;
 }
 
 .rc-text-label {
@@ -496,19 +505,19 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--ios-text-secondary);
-  margin-bottom: 6px;
+  color: var(--ios-blue);
+  margin-bottom: 4px;
 }
 
 .rc-text-content {
-  font-size: 15px;
+  font-size: 14px;
   color: var(--ios-text);
-  line-height: 1.5;
+  line-height: 1.4;
+  font-weight: 400;
 }
 
 .rc-divider {
-  height: 0.5px;
-  background: var(--ios-border);
+  display: none; /* No more ugly lines! */
 }
 
 .record-card {
