@@ -213,19 +213,28 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
     </div>
   );
 
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().toISOString().slice(0, 7));
+
   const filterRecords = (timeframe) => {
-    const now = new Date();
     return records.filter(r => {
-      const rDate = new Date(r.created_at);
+      if (!r.created_at) return false;
+      
+      const rDateStr = r.created_at.split('T')[0]; // YYYY-MM-DD
+      const rMonthStr = r.created_at.slice(0, 7);  // YYYY-MM
+
       if (timeframe === 'daily') {
-        return rDate.toDateString() === now.toDateString();
+        return rDateStr === selectedDate;
       }
       if (timeframe === 'weekly') {
-        const oneWeek = 7 * 24 * 60 * 60 * 1000;
-        return (now - rDate) < oneWeek;
+        const targetDateObj = new Date(selectedDate);
+        const recordDateObj = new Date(rDateStr);
+        // Mostrar los 7 días anteriores hasta la fecha seleccionada (inclusive)
+        const diffDays = (targetDateObj - recordDateObj) / (1000 * 60 * 60 * 24);
+        return diffDays >= 0 && diffDays < 7;
       }
       if (timeframe === 'monthly') {
-        return rDate.getMonth() === now.getMonth() && rDate.getFullYear() === now.getFullYear();
+        return rMonthStr === selectedMonth;
       }
       return true;
     });
@@ -259,11 +268,27 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
 
   const renderRecords = (timeframe) => {
     const filtered = filterRecords(timeframe);
-    const titles = { daily: 'Hoy', weekly: 'Últimos 7 días', monthly: 'Este Mes' };
+    const titles = { daily: 'Reporte Diario', weekly: 'Reporte Semanal', monthly: 'Reporte Mensual' };
     
     return (
       <div className="records-list">
-        <h2 className="ios-large-title">Reporte {titles[timeframe]}</h2>
+        <h2 className="ios-large-title">{titles[timeframe]}</h2>
+        
+        {timeframe === 'monthly' ? (
+          <input 
+            type="month" 
+            className="ios-date-picker" 
+            value={selectedMonth} 
+            onChange={(e) => setSelectedMonth(e.target.value)} 
+          />
+        ) : (
+          <input 
+            type="date" 
+            className="ios-date-picker" 
+            value={selectedDate} 
+            onChange={(e) => setSelectedDate(e.target.value)} 
+          />
+        )}
         
         {renderStats(filtered)}
 

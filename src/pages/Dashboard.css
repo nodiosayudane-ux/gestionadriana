@@ -52,6 +52,40 @@
   padding: 20px 0 40px;
 }
 
+/* iPadOS Date Picker Styles */
+.ios-date-picker {
+  background: var(--ios-surface);
+  border: 1px solid var(--ios-border);
+  color: var(--ios-text);
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+  margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-appearance: none;
+}
+
+.ios-date-picker:focus {
+  border-color: var(--ios-blue);
+  box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.3);
+}
+
+.ios-date-picker::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
+}
+
+body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
 .ios-large-title {
   font-size: 34px;
   font-weight: 700;
