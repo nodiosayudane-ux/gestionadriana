@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* iOS Color Palette */
+  --ios-blue: #007AFF;
+  --ios-green: #34C759;
+  --ios-red: #FF3B30;
+  --ios-orange: #FF9500;
+  --ios-gray: #8E8E93;
+  --ios-gray-light: #F2F2F7;
+  --ios-gray-dark: #3A3A3C;
+  --ios-bg: #F2F2F7;
+  --ios-surface: #FFFFFF;
+  --ios-text: #1C1C1E;
+  --ios-text-secondary: #8E8E93;
+  --ios-border: #E5E5EA;
+  
+  /* Glassmorphism (Apple Standard) */
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --glass-blur: blur(40px) saturate(180%);
+
+  /* Dynamic fields background */
+  --dynamic-bg: rgba(0, 0, 0, 0.03);
+}
+
+body.dark-theme {
+  --ios-gray-light: #1C1C1E;
+  --ios-gray-dark: #3A3A3C;
+  --ios-bg: #000000;
+  --ios-surface: #1C1C1E;
+  --ios-text: #FFFFFF;
+  --ios-text-secondary: #EBEBF599; /* 60% opacity white */
+  --ios-border: #38383A;
+  
+  /* Glassmorphism Dark */
+  --glass-bg: rgba(28, 28, 30, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  /* Dynamic fields background */
+  --dynamic-bg: rgba(255, 255, 255, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: var(--ios-bg);
+  color: var(--ios-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glassmorphism Utility Class */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 20px; /* Redondeo nativo Apple */
+}
+
+/* Base Inputs */
+input, select, textarea {
+  font-family: inherit;
+  font-size: 16px; /* iOS standard to prevent zoom */
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}

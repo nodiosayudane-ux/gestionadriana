@@ -1,0 +1,354 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--ios-bg);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.dashboard-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.logout-btn, .theme-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--ios-blue);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.logout-btn:hover, .theme-toggle-btn:hover {
+  background-color: rgba(0, 122, 255, 0.1);
+}
+
+.dashboard-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  padding-bottom: 90px; /* Space for bottom nav */
+}
+
+/* Form Styles - iOS Inset Grouped */
+.gestion-form-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px 0 40px;
+}
+
+.ios-large-title {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 24px;
+  color: var(--ios-text);
+  padding-left: 16px;
+}
+
+.ios-form-group {
+  background-color: var(--ios-surface);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.ios-form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--ios-border);
+  min-height: 54px;
+}
+.ios-form-row.no-border {
+  border-bottom: none;
+}
+
+.ios-form-row label {
+  font-size: 17px;
+  color: var(--ios-text);
+  font-weight: 400;
+  flex-shrink: 0;
+  margin-right: 16px;
+}
+
+.ios-input-wrapper {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.ios-form-row select {
+  font-size: 17px;
+  color: var(--ios-text-secondary);
+  border: none;
+  background: transparent;
+  text-align: right;
+  width: 100%;
+  padding: 0 20px 0 0;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.ios-chevron {
+  position: absolute;
+  right: 0;
+  font-size: 22px;
+  color: #C7C7CC;
+  pointer-events: none;
+  line-height: 1;
+  margin-top: -2px;
+}
+
+.ios-form-row select:focus, .ios-text-input:focus {
+  outline: none;
+  color: var(--ios-blue);
+}
+
+.ios-text-input {
+  font-size: 17px;
+  color: var(--ios-text);
+  border: none;
+  background: transparent;
+  text-align: right;
+  width: 100%;
+  padding: 0;
+  outline: none;
+}
+.ios-text-input::placeholder {
+  color: #C7C7CC;
+}
+
+.dynamic-field {
+  animation: slideDown 0.3s ease-out;
+  background-color: var(--dynamic-bg);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Vertical fields for text areas */
+.ios-form-row-vertical {
+  flex-direction: column;
+  align-items: flex-start;
+}
+.ios-form-row-vertical label {
+  margin-bottom: 8px;
+}
+.ios-form-row-vertical textarea {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 17px;
+  color: var(--ios-text);
+  resize: none;
+}
+.ios-form-row-vertical textarea:focus {
+  outline: none;
+}
+.ios-form-row-vertical textarea::placeholder {
+  color: #C7C7CC;
+}
+
+.ios-submit-button {
+  width: 100%;
+  background-color: var(--ios-blue);
+  color: white;
+  padding: 16px;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 600;
+  transition: transform 0.1s, background-color 0.2s;
+  border: none;
+  margin-top: 10px;
+}
+.ios-submit-button:active {
+  transform: scale(0.96);
+  background-color: #006ce4;
+}
+
+/* Records List */
+.records-list {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.section-subtitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 32px 0 16px;
+  color: var(--ios-text);
+  padding-left: 16px;
+}
+
+.stats-container {
+  background-color: var(--ios-surface);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stats-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--ios-border);
+}
+
+.stats-number {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--ios-blue);
+  line-height: 1;
+}
+
+.stats-label {
+  font-size: 16px;
+  color: var(--ios-text-secondary);
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.stats-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.stats-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--ios-bg);
+  padding: 16px;
+  border-radius: 16px;
+}
+
+.stats-item-label {
+  font-size: 14px;
+  color: var(--ios-text-secondary);
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.stats-item-val {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ios-text);
+}
+
+.no-records {
+  text-align: center;
+  color: var(--ios-text-secondary);
+  margin-top: 40px;
+}
+.record-card {
+  padding: 20px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  background: var(--ios-surface);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+.record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--ios-border);
+  padding-bottom: 12px;
+}
+.badge {
+  background-color: rgba(0, 122, 255, 0.1);
+  color: var(--ios-blue);
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.date {
+  font-size: 14px;
+  color: var(--ios-text-secondary);
+}
+.record-body p {
+  font-size: 16px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  color: var(--ios-text);
+}
+
+.record-text-blocks {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: var(--dynamic-bg);
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.text-block p {
+  margin-top: 4px;
+  color: var(--ios-text-secondary);
+  font-size: 15px;
+}
+
+/* Bottom Nav */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0 20px;
+  border-top: 1px solid var(--glass-border);
+  z-index: 10;
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--ios-text-secondary);
+  width: 25%;
+}
+.nav-item span {
+  font-size: 11px;
+  font-weight: 500;
+}
+.nav-item.active {
+  color: var(--ios-blue);
+}
