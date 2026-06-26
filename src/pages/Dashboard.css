@@ -408,7 +408,7 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 4px;
+  gap: 2px;
 }
 
 .rc-solicitud-badge {
@@ -439,9 +439,8 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
-  border-radius: 16px;
-  background: rgba(120, 120, 128, 0.05); /* very subtle gray background instead of borders */
+  padding: 8px 0;
+  background: transparent;
 }
 
 .rc-contact-icon {
@@ -495,9 +494,8 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
 }
 
 .rc-text-block {
-  background: rgba(120, 120, 128, 0.03);
-  padding: 12px 14px;
-  border-radius: 16px;
+  background: transparent;
+  padding: 8px 0;
 }
 
 .rc-text-label {
