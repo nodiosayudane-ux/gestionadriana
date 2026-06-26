@@ -604,7 +604,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       <header className="dashboard-header glass macos-pill">
         <div className="macos-controls">
           <span className="mac-btn close" onClick={onLogout} title="Cerrar sesión"></span>
-          <span className="mac-btn minimize"></span>
+          <span className="mac-btn minimize" onClick={toggleTheme} title="Cambiar tema (Claro/Oscuro)"></span>
           <span className="mac-btn maximize" onClick={() => {
             if (!document.fullscreenElement) {
               document.documentElement.requestFullscreen().catch(e => console.log(e));
