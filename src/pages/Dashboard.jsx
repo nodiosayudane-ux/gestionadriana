@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DailyChart, WeeklyChart, MonthlyChart } from '../components/Charts';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import './Dashboard.css';
 import './DailyView.css';
 
@@ -61,15 +62,87 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
     fetchRecords();
   }, []);
 
-  const exportToPDF = async (filename) => {
-    if (!reportRef.current) return;
+  const exportToPDF = async (filename, title, data, chartId) => {
     try {
-      const canvas = await html2canvas(reportRef.current, { scale: 2, backgroundColor: theme === 'dark' ? '#000000' : '#F2F2F7' });
-      const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      
+      pdf.setFontSize(22);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text("Gestión Dra. Adriana", 14, 22);
+      
+      pdf.setFontSize(14);
+      pdf.setTextColor(100, 100, 100);
+      pdf.text(title, 14, 32);
+
+      let currentY = 42;
+
+      const countBySolicitud = data.reduce((acc, curr) => {
+        acc[curr.solicitud] = (acc[curr.solicitud] || 0) + 1;
+        return acc;
+      }, {});
+      
+      pdf.setFontSize(12);
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(`Total Gestiones: ${data.length}`, 14, currentY);
+      currentY += 8;
+
+      Object.entries(countBySolicitud).forEach(([key, val]) => {
+        pdf.text(`- ${key}: ${val}`, 14, currentY);
+        currentY += 6;
+      });
+
+      currentY += 10;
+
+      const chartEl = document.getElementById(chartId);
+      if (chartEl) {
+        const canvas = await html2canvas(chartEl, { scale: 2, backgroundColor: '#ffffff' });
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = 160; 
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        
+        const xPos = (pageWidth - imgWidth) / 2;
+        
+        if (currentY + imgHeight > pdf.internal.pageSize.getHeight() - 20) {
+            pdf.addPage();
+            currentY = 20;
+        }
+
+        pdf.addImage(imgData, 'PNG', xPos, currentY, imgWidth, imgHeight);
+        currentY += imgHeight + 15;
+      }
+
+      const tableColumn = ["Fecha", "Solicitante", "Solicitud", "Medio", "Detalle"];
+      const tableRows = [];
+
+      data.forEach(r => {
+        let details = r.descripcion || "";
+        if (r.particular_nombre) details += `\nPaciente: ${r.particular_nombre}`;
+        if (r.eps_nombre) details += `\nEPS: ${r.eps_nombre}`;
+        if (r.institucion) details += `\nInst: ${r.institucion}`;
+        if (r.gob_secretaria) details += `\nGob: ${r.gob_secretaria}`;
+        if (r.dir_funcionario) details += `\nFuncionario: ${r.dir_funcionario}`;
+        
+        const rowData = [
+          new Date(r.created_at).toLocaleDateString('es-CO'),
+          r.solicitante,
+          r.solicitud,
+          r.medio,
+          details
+        ];
+        tableRows.push(rowData);
+      });
+
+      autoTable(pdf, {
+        head: [tableColumn],
+        body: tableRows,
+        startY: currentY,
+        styles: { fontSize: 9, cellPadding: 3 },
+        headStyles: { fillColor: [0, 122, 255] },
+        alternateRowStyles: { fillColor: [245, 245, 245] },
+        margin: { top: 20 },
+      });
+
       pdf.save(`${filename}.pdf`);
     } catch (err) {
       console.error('Error generando PDF:', err);
@@ -491,7 +564,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       <div className="records-list" ref={reportRef}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 className="ios-large-title" style={{marginBottom: 0}}>Reporte Diario</h2>
-          <button onClick={() => exportToPDF(`Reporte_Diario_${selectedDate}`)} className="pdf-export-btn" title="Descargar PDF">
+          <button onClick={() => exportToPDF(`Reporte_Diario_${selectedDate}`, `Reporte Diario - ${subtitle}`, filtered, 'daily-chart')} className="pdf-export-btn" title="Descargar PDF">
             <Download size={22} />
           </button>
         </div>
@@ -503,7 +576,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         </div>
         
         {renderStats(filtered)}
-        <div className="ios-inset-group" style={{padding: '0 16px 20px 16px'}}>
+        <div id="daily-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
           <DailyChart records={filtered} />
         </div>
 
@@ -548,7 +621,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       <div className="records-list" ref={reportRef}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <h2 className="ios-large-title" style={{marginBottom: 0}}>Reporte Semanal</h2>
-          <button onClick={() => exportToPDF(`Reporte_Semanal_${selectedDate}`)} className="pdf-export-btn" title="Descargar PDF">
+          <button onClick={() => exportToPDF(`Reporte_Semanal_${selectedDate}`, `Reporte Semanal`, weeklyFiltered, 'weekly-chart')} className="pdf-export-btn" title="Descargar PDF">
             <Download size={22} />
           </button>
         </div>
@@ -560,7 +633,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         
         {renderStats(weeklyFiltered)}
         
-        <div className="ios-inset-group" style={{padding: '0 16px 20px 16px'}}>
+        <div id="weekly-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
           <WeeklyChart 
             records={weeklyFiltered} 
             weekDays={Array.from({length: 7}, (_, i) => {
@@ -598,7 +671,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
       <div className="records-list" ref={reportRef}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <h2 className="ios-large-title" style={{marginBottom: 0}}>Reporte Mensual</h2>
-          <button onClick={() => exportToPDF(`Reporte_Mensual_${selectedMonth}`)} className="pdf-export-btn" title="Descargar PDF">
+          <button onClick={() => exportToPDF(`Reporte_Mensual_${selectedMonth}`, `Reporte Mensual - ${selectedMonth}`, monthlyFiltered, 'monthly-chart')} className="pdf-export-btn" title="Descargar PDF">
             <Download size={22} />
           </button>
         </div>
@@ -612,7 +685,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         
         {renderStats(monthlyFiltered)}
 
-        <div className="ios-inset-group" style={{padding: '0 16px 20px 16px'}}>
+        <div id="monthly-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
           <MonthlyChart 
             records={monthlyFiltered} 
             year={parseInt(selectedMonth.split('-')[0])}
