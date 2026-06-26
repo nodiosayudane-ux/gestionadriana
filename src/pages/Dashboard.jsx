@@ -587,7 +587,9 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
             <p>No hay gestiones este día.</p>
           </div>
         ) : (
-          filtered.map(r => <RecordCard key={r.id} record={r} />)
+          <div className="records-grid">
+            {filtered.map(r => <RecordCard key={r.id} record={r} />)}
+          </div>
         )}
       </div>
     );
@@ -656,7 +658,9 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
             <p>No hay gestiones este día.</p>
           </div>
         ) : (
-          filtered.map(r => <RecordCard key={r.id} record={r} />)
+          <div className="records-grid">
+            {filtered.map(r => <RecordCard key={r.id} record={r} />)}
+          </div>
         )}
       </div>
     );
@@ -693,14 +697,16 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
           />
         </div>
 
-        <h3 className="section-subtitle">{selectedDate.startsWith(selectedMonth) ? `Gestiones del ${new Date(selectedDate + 'T12:00:00').getDate()}` : 'Selecciona un día'}</h3>
+        <h3 className="section-subtitle">Gestiones del {selectedDate}</h3>
         {filtered.length === 0 ? (
           <div className="no-records-card">
             <span style={{fontSize:'40px'}}>📋</span>
-            <p>No hay gestiones este día.</p>
+            <p>Selecciona un día en el calendario o no hay gestiones.</p>
           </div>
         ) : (
-          filtered.map(r => <RecordCard key={r.id} record={r} />)
+          <div className="records-grid">
+            {filtered.map(r => <RecordCard key={r.id} record={r} />)}
+          </div>
         )}
       </div>
     );

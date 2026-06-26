@@ -11,15 +11,16 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.108.2",
+    "apexcharts": "^5.15.2",
     "dotenv": "^17.4.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
     "lucide-react": "^1.21.0",
     "react": "^19.2.7",
+    "react-apexcharts": "^2.1.1",
     "react-dom": "^19.2.7",
-    "react-router-dom": "^7.18.0",
-    "recharts": "^3.9.0"
+    "react-router-dom": "^7.18.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",

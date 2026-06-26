@@ -1,31 +1,7 @@
 import React from 'react';
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, AreaChart, Area
-} from 'recharts';
+import Chart from 'react-apexcharts';
 
 const COLORS = ['#007AFF', '#34C759', '#FF9500', '#FF3B30', '#AF52DE'];
-
-const CustomTooltip = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div style={{
-        backgroundColor: 'var(--ios-surface)',
-        padding: '10px 14px',
-        border: '1px solid var(--ios-border)',
-        borderRadius: '12px',
-        boxShadow: '0 4px 16px rgba(0,0,0,0.1)',
-        color: 'var(--ios-text)'
-      }}>
-        <p style={{ margin: 0, fontWeight: 600, fontSize: '14px' }}>{label || payload[0].name}</p>
-        <p style={{ margin: '4px 0 0 0', color: payload[0].color || 'var(--ios-blue)', fontSize: '15px' }}>
-          Gestiones: <span style={{fontWeight: 700}}>{payload[0].value}</span>
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
 
 // Gráfica de Donut para el Día (Distribución por Tipo de Solicitante)
 export const DailyChart = ({ records }) => {
@@ -36,35 +12,54 @@ export const DailyChart = ({ records }) => {
     return acc;
   }, {});
 
-  const data = Object.keys(dataMap).map(key => ({
-    name: key,
-    value: dataMap[key]
-  }));
+  const labels = Object.keys(dataMap);
+  const series = Object.values(dataMap);
+
+  const options = {
+    chart: {
+      type: 'donut',
+      fontFamily: 'inherit',
+      background: 'transparent',
+      animations: {
+        enabled: true,
+        easing: 'easeinout',
+        speed: 800,
+      }
+    },
+    labels: labels,
+    colors: COLORS,
+    stroke: { width: 0 },
+    plotOptions: {
+      pie: {
+        donut: {
+          size: '70%',
+          labels: {
+            show: true,
+            name: { fontSize: '14px', fontWeight: 600, color: 'var(--ios-text-secondary)' },
+            value: { fontSize: '24px', fontWeight: 700, color: 'var(--ios-text)' },
+            total: {
+              show: true,
+              showAlways: false,
+              label: 'Total',
+              fontSize: '14px',
+              fontWeight: 600,
+              color: 'var(--ios-text-secondary)'
+            }
+          }
+        }
+      }
+    },
+    dataLabels: { enabled: false },
+    legend: { show: false },
+    theme: { mode: document.body.classList.contains('dark-theme') ? 'dark' : 'light' }
+  };
 
   return (
-    <div style={{ width: '100%', height: 200, marginTop: '20px' }}>
-      <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '10px', color: 'var(--ios-text)', textAlign: 'center' }}>
+    <div style={{ width: '100%', marginTop: '20px' }}>
+      <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '20px', color: 'var(--ios-text)', textAlign: 'center' }}>
         Por Solicitante
       </h3>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            innerRadius={60}
-            outerRadius={80}
-            paddingAngle={5}
-            dataKey="value"
-            stroke="none"
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip content={<CustomTooltip />} />
-        </PieChart>
-      </ResponsiveContainer>
+      <Chart options={options} series={series} type="donut" height={250} />
     </div>
   );
 };
@@ -73,7 +68,6 @@ export const DailyChart = ({ records }) => {
 export const WeeklyChart = ({ records, weekDays }) => {
   if (!records || records.length === 0) return null;
 
-  // weekDays es un array de objetos de fecha
   const data = weekDays.map(dateObj => {
     const dStr = `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(2, '0')}-${String(dateObj.getDate()).padStart(2, '0')}`;
     const dayName = dateObj.toLocaleDateString('es-ES', { weekday: 'short' });
@@ -83,22 +77,52 @@ export const WeeklyChart = ({ records, weekDays }) => {
       const rDateStr = `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}-${String(recordDate.getDate()).padStart(2, '0')}`;
       return rDateStr === dStr;
     }).length;
-    return { name: dayName, Gestiones: count };
+    return { x: dayName, y: count };
   });
 
+  const options = {
+    chart: {
+      type: 'bar',
+      fontFamily: 'inherit',
+      background: 'transparent',
+      toolbar: { show: false }
+    },
+    plotOptions: {
+      bar: {
+        borderRadius: 8,
+        columnWidth: '40%',
+      }
+    },
+    colors: ['#007AFF'],
+    dataLabels: { enabled: false },
+    stroke: { width: 0 },
+    xaxis: {
+      categories: data.map(d => d.x),
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      labels: { style: { colors: 'var(--ios-text-secondary)', fontSize: '12px' } }
+    },
+    yaxis: {
+      labels: { style: { colors: 'var(--ios-text-secondary)' } },
+      axisBorder: { show: false },
+      axisTicks: { show: false }
+    },
+    grid: {
+      borderColor: 'var(--glass-border)',
+      strokeDashArray: 4,
+      yaxis: { lines: { show: true } }
+    },
+    theme: { mode: document.body.classList.contains('dark-theme') ? 'dark' : 'light' }
+  };
+
+  const series = [{ name: 'Gestiones', data: data.map(d => d.y) }];
+
   return (
-    <div style={{ width: '100%', height: 220, marginTop: '20px' }}>
+    <div style={{ width: '100%', marginTop: '20px' }}>
       <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '10px', color: 'var(--ios-text)', textAlign: 'center' }}>
         Actividad Semanal
       </h3>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
-          <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'var(--ios-text-secondary)', fontSize: 12}} />
-          <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{fill: 'var(--ios-text-secondary)', fontSize: 12}} />
-          <Tooltip cursor={{fill: 'rgba(0,122,255,0.05)', rx: 8}} content={<CustomTooltip />} />
-          <Bar dataKey="Gestiones" fill="var(--ios-blue)" radius={[6, 6, 6, 6]} barSize={30} />
-        </BarChart>
-      </ResponsiveContainer>
+      <Chart options={options} series={series} type="bar" height={250} />
     </div>
   );
 };
@@ -118,28 +142,55 @@ export const MonthlyChart = ({ records, month, year }) => {
       const rDateStr = `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}-${String(recordDate.getDate()).padStart(2, '0')}`;
       return rDateStr === dStr;
     }).length;
-    data.push({ name: String(i), Gestiones: count });
+    data.push({ x: String(i), y: count });
   }
 
+  const options = {
+    chart: {
+      type: 'area',
+      fontFamily: 'inherit',
+      background: 'transparent',
+      toolbar: { show: false }
+    },
+    colors: ['#007AFF'],
+    dataLabels: { enabled: false },
+    stroke: { curve: 'smooth', width: 3 },
+    fill: {
+      type: 'gradient',
+      gradient: {
+        shadeIntensity: 1,
+        opacityFrom: 0.4,
+        opacityTo: 0.0,
+        stops: [0, 100]
+      }
+    },
+    xaxis: {
+      categories: data.map(d => d.x),
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+      tickAmount: 5,
+      labels: { style: { colors: 'var(--ios-text-secondary)', fontSize: '12px' } }
+    },
+    yaxis: {
+      labels: { style: { colors: 'var(--ios-text-secondary)' } },
+      axisBorder: { show: false },
+      axisTicks: { show: false }
+    },
+    grid: {
+      borderColor: 'var(--glass-border)',
+      strokeDashArray: 4,
+    },
+    theme: { mode: document.body.classList.contains('dark-theme') ? 'dark' : 'light' }
+  };
+
+  const series = [{ name: 'Gestiones', data: data.map(d => d.y) }];
+
   return (
-    <div style={{ width: '100%', height: 200, marginTop: '20px' }}>
+    <div style={{ width: '100%', marginTop: '20px' }}>
       <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '10px', color: 'var(--ios-text)', textAlign: 'center' }}>
         Tendencia Mensual
       </h3>
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
-          <defs>
-            <linearGradient id="colorGestiones" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="var(--ios-blue)" stopOpacity={0.3}/>
-              <stop offset="95%" stopColor="var(--ios-blue)" stopOpacity={0}/>
-            </linearGradient>
-          </defs>
-          <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'var(--ios-text-secondary)', fontSize: 12}} interval={4} />
-          <YAxis allowDecimals={false} axisLine={false} tickLine={false} tick={{fill: 'var(--ios-text-secondary)', fontSize: 12}} />
-          <Tooltip content={<CustomTooltip />} />
-          <Area type="monotone" dataKey="Gestiones" stroke="var(--ios-blue)" strokeWidth={3} fillOpacity={1} fill="url(#colorGestiones)" />
-        </AreaChart>
-      </ResponsiveContainer>
+      <Chart options={options} series={series} type="area" height={250} />
     </div>
   );
 };
