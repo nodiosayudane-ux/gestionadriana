@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { LogIn, Moon, Sun, UserPlus } from 'lucide-react';
+import { LogIn, Moon, Sun } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import './Login.css';
 
-function Login({ theme, toggleTheme }) {
+function Login({ onLoginSuccess, theme, toggleTheme }) {
   const [email, setEmail] = useState('adriana@gestion.com');
-  const [password, setPassword] = useState('Adriana2026Secure!');
+  const [password, setPassword] = useState('1234');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -13,20 +13,21 @@ function Login({ theme, toggleTheme }) {
     e.preventDefault();
     setLoading(true);
     setErrorMsg('');
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) setErrorMsg(error.message);
-    setLoading(false);
-  };
+    
+    // Consulta a nuestra propia tabla de usuarios
+    const { data, error } = await supabase
+      .from('usuarios')
+      .select('*')
+      .eq('email', email)
+      .eq('password', password)
+      .single();
 
-  const handleRegister = async () => {
-    setLoading(true);
-    setErrorMsg('');
-    const { error } = await supabase.auth.signUp({ email, password });
-    if (error) {
-      setErrorMsg(error.message);
+    if (error || !data) {
+      setErrorMsg('Credenciales incorrectas');
     } else {
-      alert("Usuario creado exitosamente. Ahora puedes iniciar sesión.");
+      onLoginSuccess();
     }
+    
     setLoading(false);
   };
 
@@ -49,7 +50,7 @@ function Login({ theme, toggleTheme }) {
         </div>
 
         <form className="login-form" onSubmit={handleLogin}>
-          {errorMsg && <p style={{color: 'var(--ios-red)', fontSize: '14px'}}>{errorMsg}</p>}
+          {errorMsg && <p style={{color: 'var(--ios-red)', fontSize: '14px', textAlign: 'center'}}>{errorMsg}</p>}
           <div className="input-group">
             <input 
               type="email" 
@@ -69,28 +70,9 @@ function Login({ theme, toggleTheme }) {
             />
           </div>
           <button type="submit" className="login-button" disabled={loading}>
-            {loading ? 'Cargando...' : 'Iniciar Sesión'}
+            {loading ? 'Entrando...' : 'Iniciar Sesión'}
           </button>
         </form>
-        
-        <button 
-            type="button" 
-            onClick={handleRegister}
-            disabled={loading}
-            style={{ 
-                marginTop: '20px', 
-                background: 'none', 
-                border: 'none', 
-                color: 'var(--ios-blue)', 
-                cursor: 'pointer', 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '8px', 
-                margin: '20px auto 0' 
-            }}
-        >
-          <UserPlus size={16} /> Crear cuenta
-        </button>
       </div>
     </div>
   );

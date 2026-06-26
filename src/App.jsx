@@ -2,29 +2,25 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useState, useEffect } from 'react';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import { supabase } from './supabaseClient';
 
 function App() {
-  const [session, setSession] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState(() => {
+    return localStorage.getItem('user_session') === 'active';
+  });
+  
   const [theme, setTheme] = useState(() => {
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setLoading(false);
-    });
+  const handleLoginSuccess = () => {
+    localStorage.setItem('user_session', 'active');
+    setSession(true);
+  };
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  const handleLogout = () => {
+    localStorage.removeItem('user_session');
+    setSession(false);
+  };
 
   // Apply theme class to body
   useEffect(() => {
@@ -37,20 +33,16 @@ function App() {
     document.body.className = newTheme === 'dark' ? 'dark-theme' : 'light-theme';
   };
 
-  if (loading) {
-    return <div style={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', color: 'var(--ios-text)'}}>Cargando...</div>;
-  }
-
   return (
     <Router>
       <Routes>
         <Route 
           path="/login" 
-          element={!session ? <Login theme={theme} toggleTheme={toggleTheme} /> : <Navigate to="/dashboard" replace />} 
+          element={!session ? <Login onLoginSuccess={handleLoginSuccess} theme={theme} toggleTheme={toggleTheme} /> : <Navigate to="/dashboard" replace />} 
         />
         <Route 
           path="/dashboard/*" 
-          element={session ? <Dashboard theme={theme} toggleTheme={toggleTheme} /> : <Navigate to="/login" replace />} 
+          element={session ? <Dashboard onLogout={handleLogout} theme={theme} toggleTheme={toggleTheme} /> : <Navigate to="/login" replace />} 
         />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>

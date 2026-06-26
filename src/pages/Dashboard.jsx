@@ -9,7 +9,7 @@ const SOLICITANTES = ['Dirección', 'EPS', 'Particular', 'Institucional', 'Gober
 const SOLICITUDES = ['Aseguramiento', 'Agendamiento', 'Procedimientos', 'Referencia y Contrarreferencia', 'Autorización'];
 const MEDIOS = ['WhatsApp', 'Telefónica', 'Presencial', 'Correo', 'Otro'];
 
-function Dashboard({ theme, toggleTheme }) {
+function Dashboard({ onLogout, theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('form');
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -310,8 +310,8 @@ function Dashboard({ theme, toggleTheme }) {
           <button onClick={toggleTheme} className="theme-toggle-btn">
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
           </button>
-          <button onClick={() => supabase.auth.signOut()} className="logout-btn" title="Cerrar sesión">
-            <LogOut size={20} />
+          <button onClick={onLogout} className="logout-btn">
+            <LogOut size={24} />
           </button>
         </div>
       </header>
