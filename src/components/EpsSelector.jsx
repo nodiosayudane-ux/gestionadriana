@@ -23,7 +23,8 @@ const EpsSelector = ({ options, value, onChange }) => {
           className={`eps-pill ${value === opt ? 'selected' : ''}`}
           onClick={(e) => {
             e.preventDefault(); // Evitar submit del form
-            onChange(opt);
+            // Si tocamos la que ya está seleccionada, la "cerramos" (deseleccionamos) enviando cadena vacía
+            onChange(value === opt ? '' : opt);
           }}
         >
           {opt}

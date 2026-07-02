@@ -398,13 +398,15 @@ ${descripcion}`;
         {solicitante === 'EPS' && (
           <div className="particular-fields-group">
             <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de EPS</h4>
-            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible', padding: '12px 0' }}>
-              <label style={{ paddingLeft: '16px', marginBottom: '8px', display: 'block' }}>Nombre EPS</label>
-              <EpsSelector 
-                value={epsAsociada} 
-                options={EPS_PREDEFINIDAS} 
-                onChange={setEpsAsociada} 
-              />
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible', padding: '12px 0', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <label style={{ paddingLeft: '16px', marginBottom: '12px', display: 'block', width: '100%' }}>Nombre EPS</label>
+              <div style={{ width: '100%' }}>
+                <EpsSelector 
+                  value={epsAsociada} 
+                  options={EPS_PREDEFINIDAS} 
+                  onChange={setEpsAsociada} 
+                />
+              </div>
             </div>
             {epsAsociada === 'Otra' && (
               <div className="ios-form-row dynamic-field">
@@ -671,13 +673,15 @@ ${descripcion}`;
                 </select>
               </div>
             </div>
-            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible', padding: '12px 0' }}>
-              <label style={{ paddingLeft: '16px', marginBottom: '8px', display: 'block' }}>EPS Involucrada</label>
-              <EpsSelector 
-                value={epsAsociada} 
-                options={EPS_PREDEFINIDAS} 
-                onChange={setEpsAsociada} 
-              />
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible', padding: '12px 0', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <label style={{ paddingLeft: '16px', marginBottom: '12px', display: 'block', width: '100%' }}>EPS Involucrada</label>
+              <div style={{ width: '100%' }}>
+                <EpsSelector 
+                  value={epsAsociada} 
+                  options={EPS_PREDEFINIDAS} 
+                  onChange={setEpsAsociada} 
+                />
+              </div>
             </div>
             {epsAsociada === 'Otra' && (
               <div className="ios-form-row dynamic-field">
@@ -774,13 +778,15 @@ ${descripcion}`;
   };
 
   const renderEpsFilter = () => (
-    <div className="ios-form-row glass" style={{ overflow: 'visible', margin: '0 16px 16px 16px', borderRadius: '14px', padding: '12px 0', borderBottom: 'none' }}>
-      <label style={{ fontSize: '14px', color: 'var(--ios-text-secondary)', fontWeight: 600, paddingLeft: '16px', marginBottom: '8px', display: 'block' }}>Filtro de EPS</label>
-      <EpsSelector 
-        value={epsFilter} 
-        options={['Todas', ...EPS_PREDEFINIDAS.filter(e => e !== 'Otra')]} 
-        onChange={setEpsFilter} 
-      />
+    <div className="ios-form-row glass" style={{ overflow: 'visible', margin: '0 16px 16px 16px', borderRadius: '14px', padding: '12px 0', borderBottom: 'none', flexDirection: 'column', alignItems: 'flex-start' }}>
+      <label style={{ fontSize: '14px', color: 'var(--ios-text-secondary)', fontWeight: 600, paddingLeft: '16px', marginBottom: '12px', display: 'block', width: '100%' }}>Filtro de EPS</label>
+      <div style={{ width: '100%' }}>
+        <EpsSelector 
+          value={epsFilter} 
+          options={['Todas', ...EPS_PREDEFINIDAS.filter(e => e !== 'Otra')]} 
+          onChange={setEpsFilter} 
+        />
+      </div>
     </div>
   );
 
