@@ -198,9 +198,36 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validación base
     if (!solicitante || !solicitud || !medio) {
-        alert('Por favor completa todos los campos desplegables requeridos.');
-        return;
+      alert('Por favor completa todos los campos requeridos: Tipo de Entidad, Solicitud y Medio.');
+      return;
+    }
+    // Validación específica por solicitante
+    if (solicitante === 'EPS' && !epsAsociada) {
+      alert('Por favor selecciona el nombre de la EPS.');
+      return;
+    }
+    if (solicitante === 'EPS' && epsAsociada === 'Otra' && !otraEps.trim()) {
+      alert('Por favor escribe el nombre de la EPS.');
+      return;
+    }
+    if (solicitante === 'Particular' && !particularNombre.trim()) {
+      alert('Por favor escribe el nombre completo del particular.');
+      return;
+    }
+    if (solicitante === 'Institucional' && !institucion.trim()) {
+      alert('Por favor escribe el nombre de la institución.');
+      return;
+    }
+    if (solicitante === 'Gobernación' && !gobSecretaria.trim()) {
+      alert('Por favor completa los datos de la Gobernación.');
+      return;
+    }
+    if (solicitante === 'Dirección' && !dirFuncionario.trim()) {
+      alert('Por favor completa los datos de la Dirección.');
+      return;
     }
     setLoading(true);
 
@@ -291,8 +318,9 @@ ${descripcion}`;
         setRecords([data[0], ...records]);
       }
 
-      // Reset form
-      setSolicitante('');
+      // Reset form — Bug 1 fix: también resetear el Segmented Control
+      setIsEpsFlow(true);
+      setSolicitante('EPS');
       setSolicitud('');
       setMedio('');
       setDescripcion('');
@@ -307,18 +335,13 @@ ${descripcion}`;
       setParticularTipoDoc('');
       setParticularNumeroDoc('');
       setParticularTelefono('');
-
       setEpsContacto('');
       setEpsTelefono('');
-
       setInstDependencia('');
       setInstContacto('');
-
       setGobSecretaria('');
       setGobFuncionario('');
       setGobTelefono('');
-
-      // Reset dynamic fields
       setProcTipo('');
       setProcNombre('');
       setProcEspecialidad('');
@@ -333,10 +356,8 @@ ${descripcion}`;
       setRefDiagnostico('');
       setAsegTramite('');
       setAsegRegimen('');
-      
       setDirFuncionario('');
       setDirDependencia('');
-      
       alert('Gestión guardada en la nube exitosamente');
     } catch (error) {
       alert('Error guardando: ' + error.message);
@@ -427,13 +448,14 @@ ${descripcion}`;
         {solicitante === 'EPS' && (
           <div className="particular-fields-group">
             <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de EPS</h4>
-            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible', padding: '12px 0', flexDirection: 'column', alignItems: 'flex-start' }}>
-              <label style={{ paddingLeft: '16px', marginBottom: '12px', display: 'block', width: '100%' }}>Nombre EPS</label>
-              <div style={{ width: '100%' }}>
-                <EpsSelector 
-                  value={epsAsociada} 
-                  options={EPS_PREDEFINIDAS} 
-                  onChange={setEpsAsociada} 
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
+              <label>Nombre EPS</label>
+              <div className="ios-input-wrapper">
+                <IosSelect
+                  value={epsAsociada}
+                  options={EPS_PREDEFINIDAS}
+                  onChange={setEpsAsociada}
+                  placeholder="Seleccionar..."
                 />
               </div>
             </div>
@@ -696,13 +718,14 @@ ${descripcion}`;
             </div>
             {solicitante !== 'EPS' && (
               <>
-                <div className="ios-form-row dynamic-field" style={{ overflow: 'visible', padding: '12px 0', flexDirection: 'column', alignItems: 'flex-start' }}>
-                  <label style={{ paddingLeft: '16px', marginBottom: '12px', display: 'block', width: '100%' }}>EPS Involucrada</label>
-                  <div style={{ width: '100%' }}>
-                    <EpsSelector 
-                      value={epsAsociada} 
-                      options={EPS_PREDEFINIDAS} 
-                      onChange={setEpsAsociada} 
+                <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
+                  <label>EPS Involucrada</label>
+                  <div className="ios-input-wrapper">
+                    <IosSelect
+                      value={epsAsociada}
+                      options={EPS_PREDEFINIDAS}
+                      onChange={setEpsAsociada}
+                      placeholder="Seleccionar..."
                     />
                   </div>
                 </div>
