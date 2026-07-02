@@ -989,15 +989,15 @@ ${descripcion}`;
           </div>
         )}
 
-        <h3 className="section-subtitle">Gestiones del {new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-CO', {weekday:'long'})}</h3>
-        {filtered.length === 0 ? (
+        <h3 className="section-subtitle">Gestiones de la semana</h3>
+        {weeklyFiltered.length === 0 ? (
           <div className="no-records-card">
             <span style={{fontSize:'40px'}}>📋</span>
-            <p>No hay gestiones este día.</p>
+            <p>No hay gestiones esta semana.</p>
           </div>
         ) : (
           <div className="records-grid">
-            {filtered.map(r => <RecordCard key={r.id} record={r} />)}
+            {weeklyFiltered.map(r => <RecordCard key={r.id} record={r} />)}
           </div>
         )}
       </div>
@@ -1005,8 +1005,6 @@ ${descripcion}`;
   };
 
   const renderMonthlyView = () => {
-    // Al tocar un día en el mes, filtramos por ese día específico
-    const filtered = selectedDate.startsWith(selectedMonth) ? filterRecords('daily') : [];
     const monthlyFiltered = filterRecords('monthly');
 
     return (
@@ -1040,15 +1038,15 @@ ${descripcion}`;
           </div>
         )}
 
-        <h3 className="section-subtitle">Gestiones del {selectedDate}</h3>
-        {filtered.length === 0 ? (
+        <h3 className="section-subtitle">Gestiones de {new Date(selectedMonth + '-01').toLocaleDateString('es-CO', {month:'long', year:'numeric'})}</h3>
+        {monthlyFiltered.length === 0 ? (
           <div className="no-records-card">
             <span style={{fontSize:'40px'}}>📋</span>
-            <p>Selecciona un día en el calendario o no hay gestiones.</p>
+            <p>No hay gestiones este mes.</p>
           </div>
         ) : (
           <div className="records-grid">
-            {filtered.map(r => <RecordCard key={r.id} record={r} />)}
+            {monthlyFiltered.map(r => <RecordCard key={r.id} record={r} />)}
           </div>
         )}
       </div>
