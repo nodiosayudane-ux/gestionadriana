@@ -829,7 +829,7 @@ ${descripcion}`;
 
     return (
       <div className="ios-form-group" style={{ marginTop: '16px', marginBottom: '24px', overflow: 'visible' }}>
-        <div className="ios-form-row" style={{ overflow: 'visible' }}>
+        <div className={`ios-form-row ${!showEpsFilter ? 'no-border' : ''}`} style={{ overflow: 'visible' }}>
           <label>Filtro de Entidad</label>
           <div className="ios-input-wrapper">
             <IosSelect 
@@ -841,7 +841,7 @@ ${descripcion}`;
         </div>
 
         {showEpsFilter && (
-          <div className="ios-form-row" style={{ overflow: 'visible' }}>
+          <div className="ios-form-row no-border" style={{ overflow: 'visible' }}>
             <label>Filtro de EPS</label>
             <div className="ios-input-wrapper">
               <IosSelect 
