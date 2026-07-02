@@ -774,6 +774,11 @@ ${descripcion}`;
     return records.filter(r => {
       if (!r.created_at) return false;
 
+      // Solicitante Filter
+      if (solicitanteFilter !== 'Todos') {
+        if (r.solicitante !== solicitanteFilter) return false;
+      }
+
       // EPS Filter
       if (epsFilter !== 'Todas') {
         const recordEps = r.eps_nombre || r.eps_asociada || '';
@@ -830,7 +835,7 @@ ${descripcion}`;
     ]));
 
     return (
-      <div className="ios-inset-group" style={{ marginTop: '16px', marginBottom: '24px' }}>
+      <div className="ios-inset-group" style={{ marginTop: '16px', marginBottom: '8px' }}>
         <div className="ios-inset-row" style={{ flexDirection: 'column', alignItems: 'flex-start', padding: '12px 16px' }}>
           <label style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--ios-text-secondary)', fontWeight: 500, marginBottom: '12px' }}>Filtro de EPS</label>
           <div style={{ width: '100%' }}>
@@ -844,6 +849,21 @@ ${descripcion}`;
       </div>
     );
   };
+
+  const renderSolicitanteFilter = () => (
+    <div className="ios-inset-group" style={{ marginBottom: '24px' }}>
+      <div className="ios-inset-row" style={{ flexDirection: 'column', alignItems: 'flex-start', padding: '12px 16px' }}>
+        <label style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--ios-text-secondary)', fontWeight: 500, marginBottom: '12px' }}>Filtro de Entidad</label>
+        <div style={{ width: '100%' }}>
+          <EpsSelector 
+            value={solicitanteFilter} 
+            options={['Todos', ...SOLICITANTES]} 
+            onChange={setSolicitanteFilter} 
+          />
+        </div>
+      </div>
+    </div>
+  );
 
   const renderStats = (filtered) => {
     if (filtered.length === 0) return null;
@@ -895,6 +915,7 @@ ${descripcion}`;
         </div>
         
         {renderEpsFilter()}
+        {renderSolicitanteFilter()}
         {renderStats(filtered)}
         {filtered.length > 0 && (
           <div id="daily-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
@@ -957,6 +978,7 @@ ${descripcion}`;
         
         <div style={{marginTop: '16px'}}>
           {renderEpsFilter()}
+          {renderSolicitanteFilter()}
         </div>
         {renderStats(weeklyFiltered)}
         
@@ -1016,6 +1038,7 @@ ${descripcion}`;
         
         <div style={{marginTop: '16px'}}>
           {renderEpsFilter()}
+          {renderSolicitanteFilter()}
         </div>
         {renderStats(monthlyFiltered)}
 
