@@ -321,11 +321,38 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
 }
 
 .particular-fields-group {
-  background: var(--dynamic-bg);
-  padding: 15px;
-  border-radius: 16px;
-  margin-top: 10px;
-  border: 1px solid var(--ios-border);
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  margin-top: 24px;
+  border: none;
+}
+
+.particular-fields-group h4.section-subtitle {
+  padding-left: 20px;
+  margin-top: 0;
+  margin-bottom: 8px !important;
+  text-transform: uppercase;
+  font-size: 13px !important;
+  font-weight: 500;
+  color: var(--ios-text-secondary) !important;
+  letter-spacing: 0.5px;
+}
+
+.particular-fields-group .dynamic-field {
+  background-color: var(--dynamic-bg);
+  border-bottom: 1px solid var(--ios-border);
+}
+
+.particular-fields-group div.dynamic-field:first-of-type {
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.particular-fields-group div.dynamic-field:last-child {
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  border-bottom: none;
 }
 
 .particular-data-card {
