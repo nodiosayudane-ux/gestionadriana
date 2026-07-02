@@ -248,13 +248,17 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
 /* Segmented Control Principal (Estilo nativo iPadOS) */
 .main-flow-segment {
   display: flex;
-  background: rgba(120, 120, 128, 0.16);
+  background: rgba(118, 118, 128, 0.12);
   border-radius: 9px;
   padding: 2px;
   margin-bottom: 24px;
   border: none;
   box-shadow: none;
 }
+body.dark-theme .main-flow-segment {
+  background: rgba(118, 118, 128, 0.24);
+}
+
 .main-flow-segment button {
   flex: 1;
   padding: 6px 0;
@@ -263,16 +267,21 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
   border-radius: 7px;
   font-size: 13px;
   font-weight: 500;
-  color: var(--ios-text-secondary);
+  color: var(--ios-text);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
   box-shadow: none;
 }
+
 .main-flow-segment button.active {
-  background: var(--ios-bg); /* Use background color to contrast with the well */
-  color: var(--ios-text);
+  background: #FFFFFF;
+  color: #000000;
   font-weight: 600;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04), 0px 0px 0px 0.5px rgba(0,0,0,0.04);
+}
+body.dark-theme .main-flow-segment button.active {
+  background: #636366;
+  color: #FFFFFF;
 }
 
 .ios-submit-button:active {
