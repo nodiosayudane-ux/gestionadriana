@@ -18,7 +18,7 @@ import { supabase } from '../supabaseClient';
 const SOLICITANTES = ['Dirección', 'EPS', 'Particular', 'Institucional', 'Gobernación'];
 const SOLICITUDES = ['Aseguramiento', 'Agendamiento', 'Procedimientos', 'Referencia y Contrarreferencia', 'Autorización'];
 const MEDIOS = ['WhatsApp', 'Telefónica', 'Presencial', 'Correo', 'Otro'];
-const EPS_PREDEFINIDAS = ['Sura', 'Sanitas', 'Nueva EPS', 'Salud Total', 'Compensar', 'Mutual Ser', 'Asmet Salud', 'Emssanar', 'Savia Salud', 'Cajacopi', 'Otra'];
+const EPS_PREDEFINIDAS = ['Nueva EPS', 'Coosalud EPS', 'Sanitas EPS', 'Comfaoriente EPS', 'Salud Total EPS', 'Otra'];
 
 function Dashboard({ onLogout, theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('form');
