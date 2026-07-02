@@ -324,7 +324,7 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
   background: transparent;
   padding: 0;
   border-radius: 0;
-  margin-top: 24px;
+  margin: 24px 16px 24px 16px; /* Margen para que no toque las orillas (Inset) */
   border: none;
 }
 

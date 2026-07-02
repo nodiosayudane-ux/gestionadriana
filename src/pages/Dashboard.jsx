@@ -513,15 +513,14 @@ ${descripcion}`;
         {solicitud === 'Procedimientos' && (
           <div className="particular-fields-group">
             <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos Clínicos del Procedimiento</h4>
-            <div className="ios-form-row dynamic-field">
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
               <label>Tipo</label>
               <div className="ios-input-wrapper">
-                <select value={procTipo} onChange={e => setProcTipo(e.target.value)} required className="ios-text-input">
-                  <option value="">Seleccionar...</option>
-                  <option value="Quirúrgico">Quirúrgico</option>
-                  <option value="Diagnóstico">Diagnóstico</option>
-                  <option value="Terapéutico">Terapéutico</option>
-                </select>
+                <IosSelect 
+                  value={procTipo} 
+                  options={['Quirúrgico', 'Diagnóstico', 'Terapéutico']} 
+                  onChange={setProcTipo} 
+                />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
@@ -536,15 +535,14 @@ ${descripcion}`;
                 <input type="text" placeholder="Ej. Gastroenterología" value={procEspecialidad} onChange={e => setProcEspecialidad(e.target.value)} required className="ios-text-input" />
               </div>
             </div>
-            <div className="ios-form-row dynamic-field">
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
               <label>Prioridad</label>
               <div className="ios-input-wrapper">
-                <select value={procPrioridad} onChange={e => setProcPrioridad(e.target.value)} required className="ios-text-input">
-                  <option value="">Seleccionar...</option>
-                  <option value="Urgencia">Urgencia</option>
-                  <option value="Prioritario">Prioritario</option>
-                  <option value="Electivo">Electivo</option>
-                </select>
+                <IosSelect 
+                  value={procPrioridad} 
+                  options={['Urgencia', 'Prioritario', 'Electivo']} 
+                  onChange={setProcPrioridad} 
+                />
               </div>
             </div>
           </div>
@@ -553,15 +551,14 @@ ${descripcion}`;
         {solicitud === 'Agendamiento' && (
           <div className="particular-fields-group">
             <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de la Cita</h4>
-            <div className="ios-form-row dynamic-field">
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
               <label>Tipo Consulta</label>
               <div className="ios-input-wrapper">
-                <select value={agenTipoConsulta} onChange={e => setAgenTipoConsulta(e.target.value)} required className="ios-text-input">
-                  <option value="">Seleccionar...</option>
-                  <option value="Primera Vez">Primera Vez</option>
-                  <option value="Control">Control</option>
-                  <option value="Lectura Exámenes">Lectura Exámenes</option>
-                </select>
+                <IosSelect 
+                  value={agenTipoConsulta} 
+                  options={['Primera Vez', 'Control', 'Lectura Exámenes']} 
+                  onChange={setAgenTipoConsulta} 
+                />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
@@ -582,15 +579,14 @@ ${descripcion}`;
         {solicitud === 'Autorización' && (
           <div className="particular-fields-group">
             <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de la Autorización</h4>
-            <div className="ios-form-row dynamic-field">
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
               <label>Servicio</label>
               <div className="ios-input-wrapper">
-                <select value={autTipoServicio} onChange={e => setAutTipoServicio(e.target.value)} required className="ios-text-input">
-                  <option value="">Seleccionar...</option>
-                  <option value="Medicamentos">Medicamentos</option>
-                  <option value="Insumos">Insumos</option>
-                  <option value="Cirugía/Procedimiento">Cirugía/Procedimiento</option>
-                </select>
+                <IosSelect 
+                  value={autTipoServicio} 
+                  options={['Medicamentos', 'Insumos', 'Cirugía/Procedimiento']} 
+                  onChange={setAutTipoServicio} 
+                />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
@@ -599,15 +595,14 @@ ${descripcion}`;
                 <input type="text" placeholder="MIPRES o Radicado" value={autNumero} onChange={e => setAutNumero(e.target.value)} className="ios-text-input" />
               </div>
             </div>
-            <div className="ios-form-row dynamic-field">
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
               <label>Estado</label>
               <div className="ios-input-wrapper">
-                <select value={autEstado} onChange={e => setAutEstado(e.target.value)} required className="ios-text-input">
-                  <option value="">Seleccionar...</option>
-                  <option value="Aprobada">Aprobada</option>
-                  <option value="En Trámite">En Trámite</option>
-                  <option value="Negada">Negada</option>
-                </select>
+                <IosSelect 
+                  value={autEstado} 
+                  options={['Aprobada', 'En Trámite', 'Negada']} 
+                  onChange={setAutEstado} 
+                />
               </div>
             </div>
           </div>
@@ -616,15 +611,14 @@ ${descripcion}`;
         {solicitud === 'Referencia y Contrarreferencia' && (
           <div className="particular-fields-group">
             <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de Traslado / Referencia</h4>
-            <div className="ios-form-row dynamic-field">
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
               <label>Tipo Traslado</label>
               <div className="ios-input-wrapper">
-                <select value={refTipoTraslado} onChange={e => setRefTipoTraslado(e.target.value)} required className="ios-text-input">
-                  <option value="">Seleccionar...</option>
-                  <option value="Ambulancia Básica (TAB)">Ambulancia Básica (TAB)</option>
-                  <option value="Medicalizada (TAM)">Medicalizada (TAM)</option>
-                  <option value="Interconsulta">Interconsulta</option>
-                </select>
+                <IosSelect 
+                  value={refTipoTraslado} 
+                  options={['Ambulancia Básica (TAB)', 'Medicalizada (TAM)', 'Interconsulta']} 
+                  onChange={setRefTipoTraslado} 
+                />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
@@ -651,26 +645,24 @@ ${descripcion}`;
         {solicitud === 'Aseguramiento' && (
           <div className="particular-fields-group">
             <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Trámite de Aseguramiento</h4>
-            <div className="ios-form-row dynamic-field">
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
               <label>Trámite</label>
               <div className="ios-input-wrapper">
-                <select value={asegTramite} onChange={e => setAsegTramite(e.target.value)} required className="ios-text-input">
-                  <option value="">Seleccionar...</option>
-                  <option value="Nueva Afiliación">Nueva Afiliación</option>
-                  <option value="Traslado de EPS">Traslado de EPS</option>
-                  <option value="Desbloqueo">Desbloqueo</option>
-                </select>
+                <IosSelect 
+                  value={asegTramite} 
+                  options={['Nueva Afiliación', 'Traslado de EPS', 'Desbloqueo']} 
+                  onChange={setAsegTramite} 
+                />
               </div>
             </div>
-            <div className="ios-form-row dynamic-field">
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
               <label>Régimen</label>
               <div className="ios-input-wrapper">
-                <select value={asegRegimen} onChange={e => setAsegRegimen(e.target.value)} required className="ios-text-input">
-                  <option value="">Seleccionar...</option>
-                  <option value="Contributivo">Contributivo</option>
-                  <option value="Subsidiado">Subsidiado</option>
-                  <option value="Especial">Especial</option>
-                </select>
+                <IosSelect 
+                  value={asegRegimen} 
+                  options={['Contributivo', 'Subsidiado', 'Especial']} 
+                  onChange={setAsegRegimen} 
+                />
               </div>
             </div>
             <div className="ios-form-row dynamic-field" style={{ overflow: 'visible', padding: '12px 0', flexDirection: 'column', alignItems: 'flex-start' }}>
