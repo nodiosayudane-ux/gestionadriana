@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { PlusCircle, List, Calendar, Download } from 'lucide-react';
 import IosSelect from '../components/IosSelect';
+import EpsSelector from '../components/EpsSelector';
 import CustomCalendar from '../components/CustomCalendar';
 import RecordCard from '../components/RecordCard';
 import WeeklySegmentedControl from '../components/WeeklySegmentedControl';
@@ -397,15 +398,13 @@ ${descripcion}`;
         {solicitante === 'EPS' && (
           <div className="particular-fields-group">
             <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de EPS</h4>
-            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
-              <label>Nombre EPS</label>
-              <div className="ios-input-wrapper">
-                <IosSelect 
-                  value={epsAsociada} 
-                  options={EPS_PREDEFINIDAS} 
-                  onChange={setEpsAsociada} 
-                />
-              </div>
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible', padding: '12px 0' }}>
+              <label style={{ paddingLeft: '16px', marginBottom: '8px', display: 'block' }}>Nombre EPS</label>
+              <EpsSelector 
+                value={epsAsociada} 
+                options={EPS_PREDEFINIDAS} 
+                onChange={setEpsAsociada} 
+              />
             </div>
             {epsAsociada === 'Otra' && (
               <div className="ios-form-row dynamic-field">
@@ -672,15 +671,13 @@ ${descripcion}`;
                 </select>
               </div>
             </div>
-            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
-              <label>EPS Involucrada</label>
-              <div className="ios-input-wrapper">
-                <IosSelect 
-                  value={epsAsociada} 
-                  options={EPS_PREDEFINIDAS} 
-                  onChange={setEpsAsociada} 
-                />
-              </div>
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible', padding: '12px 0' }}>
+              <label style={{ paddingLeft: '16px', marginBottom: '8px', display: 'block' }}>EPS Involucrada</label>
+              <EpsSelector 
+                value={epsAsociada} 
+                options={EPS_PREDEFINIDAS} 
+                onChange={setEpsAsociada} 
+              />
             </div>
             {epsAsociada === 'Otra' && (
               <div className="ios-form-row dynamic-field">
@@ -777,15 +774,13 @@ ${descripcion}`;
   };
 
   const renderEpsFilter = () => (
-    <div className="ios-form-row glass" style={{ overflow: 'visible', margin: '0 16px 16px 16px', borderRadius: '14px', padding: '8px 16px', borderBottom: 'none' }}>
-      <label style={{ fontSize: '14px', color: 'var(--ios-text-secondary)', fontWeight: 600 }}>Filtro de EPS</label>
-      <div className="ios-input-wrapper">
-        <IosSelect 
-          value={epsFilter} 
-          options={['Todas', ...EPS_PREDEFINIDAS.filter(e => e !== 'Otra')]} 
-          onChange={setEpsFilter} 
-        />
-      </div>
+    <div className="ios-form-row glass" style={{ overflow: 'visible', margin: '0 16px 16px 16px', borderRadius: '14px', padding: '12px 0', borderBottom: 'none' }}>
+      <label style={{ fontSize: '14px', color: 'var(--ios-text-secondary)', fontWeight: 600, paddingLeft: '16px', marginBottom: '8px', display: 'block' }}>Filtro de EPS</label>
+      <EpsSelector 
+        value={epsFilter} 
+        options={['Todas', ...EPS_PREDEFINIDAS.filter(e => e !== 'Otra')]} 
+        onChange={setEpsFilter} 
+      />
     </div>
   );
 
