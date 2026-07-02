@@ -17,6 +17,7 @@ import { supabase } from '../supabaseClient';
 const SOLICITANTES = ['Dirección', 'EPS', 'Particular', 'Institucional', 'Gobernación'];
 const SOLICITUDES = ['Aseguramiento', 'Agendamiento', 'Procedimientos', 'Referencia y Contrarreferencia', 'Autorización'];
 const MEDIOS = ['WhatsApp', 'Telefónica', 'Presencial', 'Correo', 'Otro'];
+const EPS_PREDEFINIDAS = ['Sura', 'Sanitas', 'Nueva EPS', 'Salud Total', 'Compensar', 'Mutual Ser', 'Asmet Salud', 'Emssanar', 'Savia Salud', 'Cajacopi', 'Otra'];
 
 function Dashboard({ onLogout, theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('form');
@@ -53,6 +54,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
   const [especialidad, setEspecialidad] = useState('');
   const [institucion, setInstitucion] = useState('');
   const [epsAsociada, setEpsAsociada] = useState('');
+  const [otraEps, setOtraEps] = useState('');
   const [otroMedio, setOtroMedio] = useState('');
 
   // Dynamic fields for "Procedimientos"
@@ -78,6 +80,9 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
   // Dynamic fields for "Aseguramiento"
   const [asegTramite, setAsegTramite] = useState('');
   const [asegRegimen, setAsegRegimen] = useState('');
+
+  // Global EPS filter for reports
+  const [epsFilter, setEpsFilter] = useState('Todas');
 
   const reportRef = useRef(null);
 
@@ -197,6 +202,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
     setLoading(true);
 
     let finalDescripcion = descripcion;
+    const epsFinal = epsAsociada === 'Otra' ? otraEps : epsAsociada;
 
     if (solicitud === 'Procedimientos') {
       finalDescripcion = `**Tipo:** ${procTipo}
@@ -227,7 +233,7 @@ ${descripcion}`;
     } else if (solicitud === 'Aseguramiento') {
       finalDescripcion = `**Trámite:** ${asegTramite}
 **Régimen:** ${asegRegimen}
-**EPS:** ${epsAsociada}
+**EPS:** ${epsFinal}
 
 ${descripcion}`;
     }
@@ -241,7 +247,7 @@ ${descripcion}`;
       // Save dynamic fields only if relevant
       ...(solicitud === 'Agendamiento' && { fecha_cita: fechaCita, especialidad }),
       ...(solicitud === 'Referencia y Contrarreferencia' && { institucion }),
-      ...(solicitud === 'Aseguramiento' && { eps_asociada: epsAsociada }),
+      ...(solicitud === 'Aseguramiento' && { eps_asociada: epsFinal }),
       ...(medio === 'Otro' && { otro_medio: otroMedio }),
       ...(solicitante === 'Particular' && { 
         particular_nombre: particularNombre,
@@ -250,7 +256,7 @@ ${descripcion}`;
         particular_telefono: particularTelefono
       }),
       ...(solicitante === 'EPS' && { 
-        eps_nombre: epsAsociada, // Reusing epsAsociada for EPS name if they select EPS in solicitante
+        eps_nombre: epsFinal,
         eps_contacto: epsContacto,
         eps_telefono: epsTelefono
       }),
@@ -292,6 +298,7 @@ ${descripcion}`;
       setEspecialidad('');
       setInstitucion('');
       setEpsAsociada('');
+      setOtraEps('');
       setOtroMedio('');
       setParticularNombre('');
       setParticularTipoDoc('');
@@ -390,12 +397,24 @@ ${descripcion}`;
         {solicitante === 'EPS' && (
           <div className="particular-fields-group">
             <h4 className="section-subtitle" style={{marginTop: '0', marginBottom: '15px', color: 'var(--ios-blue)'}}>Datos de EPS</h4>
-            <div className="ios-form-row dynamic-field">
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
               <label>Nombre EPS</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={epsAsociada} onChange={e => setEpsAsociada(e.target.value)} required placeholder="Ej. Sura, Sanitas" className="ios-text-input" />
+                <IosSelect 
+                  value={epsAsociada} 
+                  options={EPS_PREDEFINIDAS} 
+                  onChange={setEpsAsociada} 
+                />
               </div>
             </div>
+            {epsAsociada === 'Otra' && (
+              <div className="ios-form-row dynamic-field">
+                <label>¿Cuál EPS?</label>
+                <div className="ios-input-wrapper">
+                  <input type="text" value={otraEps} onChange={e => setOtraEps(e.target.value)} required placeholder="Ej. EPS XYZ" className="ios-text-input" />
+                </div>
+              </div>
+            )}
             <div className="ios-form-row dynamic-field">
               <label>Contacto/Asesor</label>
               <div className="ios-input-wrapper">
@@ -653,12 +672,24 @@ ${descripcion}`;
                 </select>
               </div>
             </div>
-            <div className="ios-form-row dynamic-field">
+            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
               <label>EPS Involucrada</label>
               <div className="ios-input-wrapper">
-                <input type="text" placeholder="Ej. Nueva EPS" value={epsAsociada} onChange={e => setEpsAsociada(e.target.value)} required className="ios-text-input" />
+                <IosSelect 
+                  value={epsAsociada} 
+                  options={EPS_PREDEFINIDAS} 
+                  onChange={setEpsAsociada} 
+                />
               </div>
             </div>
+            {epsAsociada === 'Otra' && (
+              <div className="ios-form-row dynamic-field">
+                <label>¿Cuál EPS?</label>
+                <div className="ios-input-wrapper">
+                  <input type="text" value={otraEps} onChange={e => setOtraEps(e.target.value)} required placeholder="Ej. EPS XYZ" className="ios-text-input" />
+                </div>
+              </div>
+            )}
           </div>
         )}
 
@@ -717,6 +748,12 @@ ${descripcion}`;
   const filterRecords = (timeframe) => {
     return records.filter(r => {
       if (!r.created_at) return false;
+
+      // EPS Filter
+      if (epsFilter !== 'Todas') {
+        const recordEps = r.eps_nombre || r.eps_asociada || '';
+        if (recordEps !== epsFilter) return false;
+      }
       
       const recordDate = new Date(r.created_at);
       const rDateStr = `${recordDate.getFullYear()}-${String(recordDate.getMonth() + 1).padStart(2, '0')}-${String(recordDate.getDate()).padStart(2, '0')}`;
@@ -738,6 +775,19 @@ ${descripcion}`;
       return true;
     });
   };
+
+  const renderEpsFilter = () => (
+    <div className="ios-form-row glass" style={{ overflow: 'visible', margin: '0 16px 16px 16px', borderRadius: '14px', padding: '8px 16px', borderBottom: 'none' }}>
+      <label style={{ fontSize: '14px', color: 'var(--ios-text-secondary)', fontWeight: 600 }}>Filtro de EPS</label>
+      <div className="ios-input-wrapper">
+        <IosSelect 
+          value={epsFilter} 
+          options={['Todas', ...EPS_PREDEFINIDAS.filter(e => e !== 'Otra')]} 
+          onChange={setEpsFilter} 
+        />
+      </div>
+    </div>
+  );
 
   const renderStats = (filtered) => {
     if (filtered.length === 0) return null;
@@ -782,12 +832,13 @@ ${descripcion}`;
           </button>
         </div>
         
-        <div className="daily-header-nav" style={{marginTop: '24px'}}>
+        <div className="daily-header-nav" style={{marginTop: '24px', marginBottom: '16px'}}>
           <button onClick={() => changeDailyDate(-1)} className="daily-nav-btn"><ChevronLeft size={24} /></button>
           <span className="daily-subtitle">{subtitle}</span>
           <button onClick={() => changeDailyDate(1)} className="daily-nav-btn"><ChevronRight size={24} /></button>
         </div>
         
+        {renderEpsFilter()}
         {renderStats(filtered)}
         <div id="daily-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
           <DailyChart records={filtered} />
@@ -846,6 +897,9 @@ ${descripcion}`;
           onDateChange={setSelectedDate} 
         />
         
+        <div style={{marginTop: '16px'}}>
+          {renderEpsFilter()}
+        </div>
         {renderStats(weeklyFiltered)}
         
         <div id="weekly-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
@@ -900,6 +954,9 @@ ${descripcion}`;
           onMonthChange={setSelectedMonth}
         />
         
+        <div style={{marginTop: '16px'}}>
+          {renderEpsFilter()}
+        </div>
         {renderStats(monthlyFiltered)}
 
         <div id="monthly-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
