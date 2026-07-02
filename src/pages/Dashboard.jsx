@@ -365,7 +365,7 @@ ${descripcion}`;
           className={!isEpsFlow ? 'active' : ''} 
           onClick={() => {
             setIsEpsFlow(false);
-            if (solicitante === 'EPS') setSolicitante('Particular');
+            if (solicitante === 'EPS') setSolicitante(''); // Forzar a que escoja
           }}
         >
           Otra Entidad
