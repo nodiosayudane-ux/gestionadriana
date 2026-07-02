@@ -774,14 +774,16 @@ ${descripcion}`;
   };
 
   const renderEpsFilter = () => (
-    <div className="ios-form-row glass" style={{ overflow: 'visible', margin: '0 16px 16px 16px', borderRadius: '14px', padding: '12px 0', borderBottom: 'none', flexDirection: 'column', alignItems: 'flex-start' }}>
-      <label style={{ fontSize: '14px', color: 'var(--ios-text-secondary)', fontWeight: 600, paddingLeft: '16px', marginBottom: '12px', display: 'block', width: '100%' }}>Filtro de EPS</label>
-      <div style={{ width: '100%' }}>
-        <EpsSelector 
-          value={epsFilter} 
-          options={['Todas', ...EPS_PREDEFINIDAS.filter(e => e !== 'Otra')]} 
-          onChange={setEpsFilter} 
-        />
+    <div className="ios-inset-group" style={{ marginTop: '16px', marginBottom: '24px' }}>
+      <div className="ios-inset-row" style={{ flexDirection: 'column', alignItems: 'flex-start', padding: '12px 16px' }}>
+        <label style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--ios-text-secondary)', fontWeight: 500, marginBottom: '12px' }}>Filtro de EPS</label>
+        <div style={{ width: '100%' }}>
+          <EpsSelector 
+            value={epsFilter} 
+            options={['Todas', ...EPS_PREDEFINIDAS.filter(e => e !== 'Otra')]} 
+            onChange={setEpsFilter} 
+          />
+        </div>
       </div>
     </div>
   );
@@ -837,9 +839,11 @@ ${descripcion}`;
         
         {renderEpsFilter()}
         {renderStats(filtered)}
-        <div id="daily-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
-          <DailyChart records={filtered} />
-        </div>
+        {filtered.length > 0 && (
+          <div id="daily-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
+            <DailyChart records={filtered} />
+          </div>
+        )}
 
         <h3 className="section-subtitle">Detalle de Gestiones</h3>
         {filtered.length === 0 ? (
@@ -899,21 +903,23 @@ ${descripcion}`;
         </div>
         {renderStats(weeklyFiltered)}
         
-        <div id="weekly-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
-          <WeeklyChart 
-            records={weeklyFiltered} 
-            weekDays={Array.from({length: 7}, (_, i) => {
-              const monday = new Date(selectedDate + 'T12:00:00');
-              const day = monday.getUTCDay();
-              const diff = monday.getUTCDate() - day + (day === 0 ? -6 : 1);
-              monday.setUTCDate(diff);
-              
-              const d = new Date(monday);
-              d.setUTCDate(d.getUTCDate() + i);
-              return d;
-            })}
-          />
-        </div>
+        {weeklyFiltered.length > 0 && (
+          <div id="weekly-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
+            <WeeklyChart 
+              records={weeklyFiltered} 
+              weekDays={Array.from({length: 7}, (_, i) => {
+                const monday = new Date(selectedDate + 'T12:00:00');
+                const day = monday.getUTCDay();
+                const diff = monday.getUTCDate() - day + (day === 0 ? -6 : 1);
+                monday.setUTCDate(diff);
+                
+                const d = new Date(monday);
+                d.setUTCDate(d.getUTCDate() + i);
+                return d;
+              })}
+            />
+          </div>
+        )}
 
         <h3 className="section-subtitle">Gestiones del {new Date(selectedDate + 'T12:00:00').toLocaleDateString('es-CO', {weekday:'long'})}</h3>
         {filtered.length === 0 ? (
@@ -956,13 +962,15 @@ ${descripcion}`;
         </div>
         {renderStats(monthlyFiltered)}
 
-        <div id="monthly-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
-          <MonthlyChart 
-            records={monthlyFiltered} 
-            year={parseInt(selectedMonth.split('-')[0])}
-            month={parseInt(selectedMonth.split('-')[1]) - 1}
-          />
-        </div>
+        {monthlyFiltered.length > 0 && (
+          <div id="monthly-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
+            <MonthlyChart 
+              records={monthlyFiltered} 
+              year={parseInt(selectedMonth.split('-')[0])}
+              month={parseInt(selectedMonth.split('-')[1]) - 1}
+            />
+          </div>
+        )}
 
         <h3 className="section-subtitle">Gestiones del {selectedDate}</h3>
         {filtered.length === 0 ? (
