@@ -807,64 +807,54 @@ ${descripcion}`;
     });
   };
 
-  const renderEpsFilter = () => {
+  const renderFilters = () => {
     // Heurística para limpiar datos heredados donde el nombre del paciente se guardó como EPS
     const isLikelyEps = (name) => {
       const upper = name.toUpperCase();
       if (upper.includes('EPS') || upper.includes('SALUD') || upper.includes('SURA') || upper.includes('COMPENSAR') || upper.includes('SANITAS')) return true;
-      if (name.length > 25) return false; // Nombres muy largos (ej. "ISABEL TERESA ROJAS CONTRERAS")
+      if (name.length > 25) return false; 
       const wordCount = name.split(' ').length;
       if (wordCount >= 3 && !upper.includes('EPS') && !upper.includes('SALUD')) return false;
       return true;
     };
 
-    // Collect all unique EPS from the database records
     const uniqueEpsInRecords = Array.from(new Set(
-      records.map(r => r.eps_nombre || r.eps_asociada)
-             .filter(Boolean)
-             .filter(isLikelyEps)
+      records.map(r => r.eps_nombre || r.eps_asociada).filter(Boolean).filter(isLikelyEps)
     )).sort();
 
-    // Base predefined options
     const baseOptions = EPS_PREDEFINIDAS.filter(e => e !== 'Otra');
-    
-    // Combine them without duplicates
-    const allOptions = Array.from(new Set([
-      'Todas',
-      ...baseOptions,
-      ...uniqueEpsInRecords
-    ]));
+    const allEpsOptions = Array.from(new Set(['Todas', ...baseOptions, ...uniqueEpsInRecords]));
+
+    const showEpsFilter = solicitanteFilter === 'Todos' || solicitanteFilter === 'EPS';
 
     return (
-      <div className="ios-inset-group" style={{ marginTop: '16px', marginBottom: '8px' }}>
-        <div className="ios-inset-row" style={{ flexDirection: 'column', alignItems: 'flex-start', padding: '12px 16px' }}>
-          <label style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--ios-text-secondary)', fontWeight: 500, marginBottom: '12px' }}>Filtro de EPS</label>
-          <div style={{ width: '100%' }}>
-            <EpsSelector 
-              value={epsFilter} 
-              options={allOptions} 
-              onChange={setEpsFilter} 
+      <div className="ios-form-group" style={{ marginTop: '16px', marginBottom: '24px' }}>
+        <div className="ios-form-row" style={{ overflow: 'visible' }}>
+          <label>Filtro de Entidad</label>
+          <div className="ios-input-wrapper">
+            <IosSelect 
+              value={solicitanteFilter} 
+              options={['Todos', ...SOLICITANTES]} 
+              onChange={setSolicitanteFilter} 
             />
           </div>
         </div>
+
+        {showEpsFilter && (
+          <div className="ios-form-row" style={{ overflow: 'visible' }}>
+            <label>Filtro de EPS</label>
+            <div className="ios-input-wrapper">
+              <IosSelect 
+                value={epsFilter} 
+                options={allEpsOptions} 
+                onChange={setEpsFilter} 
+              />
+            </div>
+          </div>
+        )}
       </div>
     );
   };
-
-  const renderSolicitanteFilter = () => (
-    <div className="ios-inset-group" style={{ marginBottom: '24px' }}>
-      <div className="ios-inset-row" style={{ flexDirection: 'column', alignItems: 'flex-start', padding: '12px 16px' }}>
-        <label style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--ios-text-secondary)', fontWeight: 500, marginBottom: '12px' }}>Filtro de Entidad</label>
-        <div style={{ width: '100%' }}>
-          <EpsSelector 
-            value={solicitanteFilter} 
-            options={['Todos', ...SOLICITANTES]} 
-            onChange={setSolicitanteFilter} 
-          />
-        </div>
-      </div>
-    </div>
-  );
 
   const renderStats = (filtered) => {
     if (filtered.length === 0) return null;
@@ -915,8 +905,7 @@ ${descripcion}`;
           <button onClick={() => changeDailyDate(1)} className="daily-nav-btn"><ChevronRight size={24} /></button>
         </div>
         
-        {renderEpsFilter()}
-        {renderSolicitanteFilter()}
+        {renderFilters()}
         {renderStats(filtered)}
         {filtered.length > 0 && (
           <div id="daily-chart" className="ios-inset-group" style={{padding: '0 16px 20px 16px', backgroundColor: 'var(--ios-surface)'}}>
@@ -978,8 +967,7 @@ ${descripcion}`;
         />
         
         <div style={{marginTop: '16px'}}>
-          {renderEpsFilter()}
-          {renderSolicitanteFilter()}
+          {renderFilters()}
         </div>
         {renderStats(weeklyFiltered)}
         
@@ -1038,8 +1026,7 @@ ${descripcion}`;
         />
         
         <div style={{marginTop: '16px'}}>
-          {renderEpsFilter()}
-          {renderSolicitanteFilter()}
+          {renderFilters()}
         </div>
         {renderStats(monthlyFiltered)}
 
