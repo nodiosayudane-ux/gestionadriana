@@ -29,7 +29,8 @@ body.dark-theme .eps-pill {
   opacity: 0.8;
 }
 
-.eps-pill.selected {
+.eps-pill.selected,
+body.dark-theme .eps-pill.selected {
   background-color: var(--ios-blue);
   color: #FFFFFF;
   font-weight: 600;
