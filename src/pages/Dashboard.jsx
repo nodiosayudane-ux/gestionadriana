@@ -665,23 +665,27 @@ ${descripcion}`;
                 />
               </div>
             </div>
-            <div className="ios-form-row dynamic-field" style={{ overflow: 'visible', padding: '12px 0', flexDirection: 'column', alignItems: 'flex-start' }}>
-              <label style={{ paddingLeft: '16px', marginBottom: '12px', display: 'block', width: '100%' }}>EPS Involucrada</label>
-              <div style={{ width: '100%' }}>
-                <EpsSelector 
-                  value={epsAsociada} 
-                  options={EPS_PREDEFINIDAS} 
-                  onChange={setEpsAsociada} 
-                />
-              </div>
-            </div>
-            {epsAsociada === 'Otra' && (
-              <div className="ios-form-row dynamic-field">
-                <label>¿Cuál EPS?</label>
-                <div className="ios-input-wrapper">
-                  <input type="text" value={otraEps} onChange={e => setOtraEps(e.target.value)} required placeholder="Ej. EPS XYZ" className="ios-text-input" />
+            {solicitante !== 'EPS' && (
+              <>
+                <div className="ios-form-row dynamic-field" style={{ overflow: 'visible', padding: '12px 0', flexDirection: 'column', alignItems: 'flex-start' }}>
+                  <label style={{ paddingLeft: '16px', marginBottom: '12px', display: 'block', width: '100%' }}>EPS Involucrada</label>
+                  <div style={{ width: '100%' }}>
+                    <EpsSelector 
+                      value={epsAsociada} 
+                      options={EPS_PREDEFINIDAS} 
+                      onChange={setEpsAsociada} 
+                    />
+                  </div>
                 </div>
-              </div>
+                {epsAsociada === 'Otra' && (
+                  <div className="ios-form-row dynamic-field">
+                    <label>¿Cuál EPS?</label>
+                    <div className="ios-input-wrapper">
+                      <input type="text" value={otraEps} onChange={e => setOtraEps(e.target.value)} required placeholder="Ej. EPS XYZ" className="ios-text-input" />
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
