@@ -85,6 +85,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
 
   // Global EPS filter for reports
   const [epsFilter, setEpsFilter] = useState('Todas');
+  const [solicitanteFilter, setSolicitanteFilter] = useState('Todos');
 
   const reportRef = useRef(null);
 
