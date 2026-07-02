@@ -773,20 +773,37 @@ ${descripcion}`;
     });
   };
 
-  const renderEpsFilter = () => (
-    <div className="ios-inset-group" style={{ marginTop: '16px', marginBottom: '24px' }}>
-      <div className="ios-inset-row" style={{ flexDirection: 'column', alignItems: 'flex-start', padding: '12px 16px' }}>
-        <label style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--ios-text-secondary)', fontWeight: 500, marginBottom: '12px' }}>Filtro de EPS</label>
-        <div style={{ width: '100%' }}>
-          <EpsSelector 
-            value={epsFilter} 
-            options={['Todas', ...EPS_PREDEFINIDAS.filter(e => e !== 'Otra')]} 
-            onChange={setEpsFilter} 
-          />
+  const renderEpsFilter = () => {
+    // Collect all unique EPS from the database records
+    const uniqueEpsInRecords = Array.from(new Set(
+      records.map(r => r.eps_nombre || r.eps_asociada).filter(Boolean)
+    )).sort();
+
+    // Base predefined options
+    const baseOptions = EPS_PREDEFINIDAS.filter(e => e !== 'Otra');
+    
+    // Combine them without duplicates
+    const allOptions = Array.from(new Set([
+      'Todas',
+      ...baseOptions,
+      ...uniqueEpsInRecords
+    ]));
+
+    return (
+      <div className="ios-inset-group" style={{ marginTop: '16px', marginBottom: '24px' }}>
+        <div className="ios-inset-row" style={{ flexDirection: 'column', alignItems: 'flex-start', padding: '12px 16px' }}>
+          <label style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--ios-text-secondary)', fontWeight: 500, marginBottom: '12px' }}>Filtro de EPS</label>
+          <div style={{ width: '100%' }}>
+            <EpsSelector 
+              value={epsFilter} 
+              options={allOptions} 
+              onChange={setEpsFilter} 
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderStats = (filtered) => {
     if (filtered.length === 0) return null;
