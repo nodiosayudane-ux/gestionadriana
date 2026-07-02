@@ -348,7 +348,7 @@ ${descripcion}`;
     <div className="gestion-form-container">
       <h2 className="ios-large-title">Nueva Gestión</h2>
       
-      {/* ── Segmented Control Principal (EPS vs Otros) ── */}
+      {/* ── Segmented Control Principal (Estilo nativo iPadOS) ── */}
       <div className="main-flow-segment">
         <button 
           type="button" 
@@ -358,7 +358,7 @@ ${descripcion}`;
             setSolicitante('EPS');
           }}
         >
-          🏥 Trámite de EPS
+          Trámite de EPS
         </button>
         <button 
           type="button" 
@@ -368,7 +368,7 @@ ${descripcion}`;
             if (solicitante === 'EPS') setSolicitante('Particular');
           }}
         >
-          👤 Otra Entidad
+          Otra Entidad
         </button>
       </div>
 
