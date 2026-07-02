@@ -828,7 +828,7 @@ ${descripcion}`;
     const showEpsFilter = solicitanteFilter === 'Todos' || solicitanteFilter === 'EPS';
 
     return (
-      <div className="ios-form-group" style={{ marginTop: '16px', marginBottom: '24px' }}>
+      <div className="ios-form-group" style={{ marginTop: '16px', marginBottom: '24px', overflow: 'visible' }}>
         <div className="ios-form-row" style={{ overflow: 'visible' }}>
           <label>Filtro de Entidad</label>
           <div className="ios-input-wrapper">
