@@ -6,6 +6,28 @@ const RecordCard = ({ record: r }) => {
     return map[s] || '#8E8E93';
   };
 
+  const renderFormattedText = (text) => {
+    if (!text) return null;
+    
+    const lines = text.split('\n');
+    return lines.map((line, index) => {
+      const parts = line.split(/(\*\*.*?\*\*)/g);
+      
+      return (
+        <React.Fragment key={index}>
+          {parts.map((part, i) => {
+            if (part.startsWith('**') && part.endsWith('**')) {
+              const innerText = part.slice(2, -2);
+              return <span key={i} className="rc-md-key">{innerText}</span>;
+            }
+            return <span key={i}>{part}</span>;
+          })}
+          {index < lines.length - 1 && <br />}
+        </React.Fragment>
+      );
+    });
+  };
+
   return (
     <div className="record-card-v2">
       {/* ── Cabecera ── */}
@@ -24,7 +46,7 @@ const RecordCard = ({ record: r }) => {
         <div className="rc-contact-block">
           <div className="rc-contact-icon">👤</div>
           <div>
-            <p className="rc-contact-name">{r.particular_nombre}</p>
+            <p className="rc-contact-name" style={{textTransform: 'capitalize'}}>{r.particular_nombre.toLowerCase()}</p>
             <p className="rc-contact-detail">{r.particular_tipo_doc} {r.particular_numero_doc} &nbsp;·&nbsp; 📞 {r.particular_telefono}</p>
           </div>
         </div>
@@ -33,7 +55,7 @@ const RecordCard = ({ record: r }) => {
         <div className="rc-contact-block">
           <div className="rc-contact-icon">🏥</div>
           <div>
-            <p className="rc-contact-name">{r.eps_nombre}</p>
+            <p className="rc-contact-name" style={{textTransform: 'capitalize'}}>{r.eps_nombre.toLowerCase()}</p>
             <p className="rc-contact-detail">Contacto: {r.eps_contacto} &nbsp;·&nbsp; 📞 {r.eps_telefono}</p>
           </div>
         </div>
@@ -42,7 +64,7 @@ const RecordCard = ({ record: r }) => {
         <div className="rc-contact-block">
           <div className="rc-contact-icon">🏛️</div>
           <div>
-            <p className="rc-contact-name">{r.inst_nombre}</p>
+            <p className="rc-contact-name" style={{textTransform: 'capitalize'}}>{r.inst_nombre.toLowerCase()}</p>
             <p className="rc-contact-detail">{r.inst_dependencia} &nbsp;·&nbsp; {r.inst_contacto}</p>
           </div>
         </div>
@@ -51,8 +73,8 @@ const RecordCard = ({ record: r }) => {
         <div className="rc-contact-block">
           <div className="rc-contact-icon">🏢</div>
           <div>
-            <p className="rc-contact-name">{r.gob_secretaria}</p>
-            <p className="rc-contact-detail">{r.gob_funcionario} &nbsp;·&nbsp; 📞 {r.gob_telefono}</p>
+            <p className="rc-contact-name" style={{textTransform: 'capitalize'}}>{r.gob_secretaria.toLowerCase()}</p>
+            <p className="rc-contact-detail" style={{textTransform: 'capitalize'}}>{r.gob_funcionario.toLowerCase()} &nbsp;·&nbsp; 📞 {r.gob_telefono}</p>
           </div>
         </div>
       )}
@@ -60,8 +82,8 @@ const RecordCard = ({ record: r }) => {
         <div className="rc-contact-block">
           <div className="rc-contact-icon">👩‍⚕️</div>
           <div>
-            <p className="rc-contact-name">{r.dir_funcionario}</p>
-            <p className="rc-contact-detail">{r.dir_dependencia}</p>
+            <p className="rc-contact-name" style={{textTransform: 'capitalize'}}>{r.dir_funcionario.toLowerCase()}</p>
+            <p className="rc-contact-detail" style={{textTransform: 'capitalize'}}>{r.dir_dependencia.toLowerCase()}</p>
           </div>
         </div>
       )}
@@ -79,12 +101,11 @@ const RecordCard = ({ record: r }) => {
       <div className="rc-text-section">
         <div className="rc-text-block">
           <p className="rc-text-label">Descripción</p>
-          <p className="rc-text-content">{r.descripcion}</p>
+          <div className="rc-text-content">{renderFormattedText(r.descripcion)}</div>
         </div>
-        <div className="rc-divider" />
-        <div className="rc-text-block">
+        <div className="rc-text-block" style={{ paddingTop: 0 }}>
           <p className="rc-text-label">Gestión Realizada</p>
-          <p className="rc-text-content">{r.gestion_realizada}</p>
+          <div className="rc-text-content">{renderFormattedText(r.gestion_realizada)}</div>
         </div>
       </div>
     </div>
