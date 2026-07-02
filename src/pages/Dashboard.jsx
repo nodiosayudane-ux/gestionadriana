@@ -22,6 +22,7 @@ const EPS_PREDEFINIDAS = ['Nueva EPS', 'Coosalud EPS', 'Sanitas EPS', 'Comfaorie
 
 function Dashboard({ onLogout, theme, toggleTheme }) {
   const [activeTab, setActiveTab] = useState('form');
+  const [isEpsFlow, setIsEpsFlow] = useState(true);
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(false);
   
@@ -347,18 +348,45 @@ ${descripcion}`;
     <div className="gestion-form-container">
       <h2 className="ios-large-title">Nueva Gestión</h2>
       
+      {/* ── Segmented Control Principal (EPS vs Otros) ── */}
+      <div className="main-flow-segment">
+        <button 
+          type="button" 
+          className={isEpsFlow ? 'active' : ''} 
+          onClick={() => {
+            setIsEpsFlow(true);
+            setSolicitante('EPS');
+          }}
+        >
+          🏥 Trámite de EPS
+        </button>
+        <button 
+          type="button" 
+          className={!isEpsFlow ? 'active' : ''} 
+          onClick={() => {
+            setIsEpsFlow(false);
+            if (solicitante === 'EPS') setSolicitante('Particular');
+          }}
+        >
+          👤 Otra Entidad
+        </button>
+      </div>
+
       <form onSubmit={handleSubmit} className="ios-form-group">
         
-        <div className="ios-form-row" style={{ overflow: 'visible' }}>
-          <label>Solicitante</label>
-          <div className="ios-input-wrapper">
-            <IosSelect 
-              value={solicitante} 
-              options={SOLICITANTES} 
-              onChange={setSolicitante} 
-            />
+        {/* Selector secundario solo visible si NO es EPS */}
+        {!isEpsFlow && (
+          <div className="ios-form-row" style={{ overflow: 'visible' }}>
+            <label>Tipo de Entidad</label>
+            <div className="ios-input-wrapper">
+              <IosSelect 
+                value={solicitante} 
+                options={SOLICITANTES.filter(s => s !== 'EPS')} 
+                onChange={setSolicitante} 
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {solicitante === 'Particular' && (
           <div className="particular-fields-group">
@@ -774,9 +802,21 @@ ${descripcion}`;
   };
 
   const renderEpsFilter = () => {
+    // Heurística para limpiar datos heredados donde el nombre del paciente se guardó como EPS
+    const isLikelyEps = (name) => {
+      const upper = name.toUpperCase();
+      if (upper.includes('EPS') || upper.includes('SALUD') || upper.includes('SURA') || upper.includes('COMPENSAR') || upper.includes('SANITAS')) return true;
+      if (name.length > 25) return false; // Nombres muy largos (ej. "ISABEL TERESA ROJAS CONTRERAS")
+      const wordCount = name.split(' ').length;
+      if (wordCount >= 3 && !upper.includes('EPS') && !upper.includes('SALUD')) return false;
+      return true;
+    };
+
     // Collect all unique EPS from the database records
     const uniqueEpsInRecords = Array.from(new Set(
-      records.map(r => r.eps_nombre || r.eps_asociada).filter(Boolean)
+      records.map(r => r.eps_nombre || r.eps_asociada)
+             .filter(Boolean)
+             .filter(isLikelyEps)
     )).sort();
 
     // Base predefined options

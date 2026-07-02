@@ -245,6 +245,34 @@ body.dark-theme .ios-date-picker::-webkit-calendar-picker-indicator {
   border: none;
   margin-top: 10px;
 }
+/* Segmented Control Principal (EPS vs Otras) */
+.main-flow-segment {
+  display: flex;
+  background: var(--ios-surface);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  border: 1px solid var(--ios-border);
+}
+.main-flow-segment button {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ios-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.main-flow-segment button.active {
+  background: var(--ios-blue);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+}
+
 .ios-submit-button:active {
   transform: scale(0.96);
   background-color: #006ce4;
