@@ -199,37 +199,11 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación base
-    if (!solicitante || !solicitud || !medio) {
-      alert('Por favor completa todos los campos requeridos: Tipo de Entidad, Solicitud y Medio.');
-      return;
-    }
-    // Validación específica por solicitante
-    if (solicitante === 'EPS' && !epsAsociada) {
-      alert('Por favor selecciona el nombre de la EPS.');
-      return;
-    }
-    if (solicitante === 'EPS' && epsAsociada === 'Otra' && !otraEps.trim()) {
-      alert('Por favor escribe el nombre de la EPS.');
-      return;
-    }
-    if (solicitante === 'Particular' && !particularNombre.trim()) {
-      alert('Por favor escribe el nombre completo del particular.');
-      return;
-    }
-    if (solicitante === 'Institucional' && !institucion.trim()) {
-      alert('Por favor escribe el nombre de la institución.');
-      return;
-    }
-    if (solicitante === 'Gobernación' && !gobSecretaria.trim()) {
-      alert('Por favor completa los datos de la Gobernación.');
-      return;
-    }
-    if (solicitante === 'Dirección' && !dirFuncionario.trim()) {
-      alert('Por favor completa los datos de la Dirección.');
-      return;
-    }
     setLoading(true);
+
+    const finalSolicitante = solicitante || (isEpsFlow ? 'EPS' : 'Particular');
+    const finalSolicitud = solicitud || 'General';
+    const finalMedio = medio || 'WhatsApp';
 
     let finalDescripcion = descripcion;
     const epsFinal = epsAsociada === 'Otra' ? otraEps : epsAsociada;
@@ -269,9 +243,9 @@ ${descripcion}`;
     }
 
     const newRecord = {
-      solicitante,
-      solicitud,
-      medio,
+      solicitante: finalSolicitante,
+      solicitud: finalSolicitud,
+      medio: finalMedio,
       descripcion: finalDescripcion.trim(),
       gestion_realizada: gestion,
       // Save dynamic fields only if relevant
@@ -416,7 +390,7 @@ ${descripcion}`;
             <div className="ios-form-row dynamic-field">
               <label>Nombre Completo</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={particularNombre} onChange={e => setParticularNombre(e.target.value)} required placeholder="Ej. Juan Pérez" className="ios-text-input" />
+                <input type="text" value={particularNombre} onChange={e => setParticularNombre(e.target.value)} placeholder="Ej. Juan Pérez" className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
@@ -433,13 +407,13 @@ ${descripcion}`;
             <div className="ios-form-row dynamic-field">
               <label>Número Documento</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={particularNumeroDoc} onChange={e => setParticularNumeroDoc(e.target.value)} required placeholder="Ej. 1020304050" className="ios-text-input" />
+                <input type="text" value={particularNumeroDoc} onChange={e => setParticularNumeroDoc(e.target.value)} placeholder="Ej. 1020304050" className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
               <label>Teléfono</label>
               <div className="ios-input-wrapper">
-                <input type="tel" value={particularTelefono} onChange={e => setParticularTelefono(e.target.value)} required placeholder="Ej. 300 123 4567" className="ios-text-input" />
+                <input type="tel" value={particularTelefono} onChange={e => setParticularTelefono(e.target.value)} placeholder="Ej. 300 123 4567" className="ios-text-input" />
               </div>
             </div>
           </div>
@@ -463,20 +437,20 @@ ${descripcion}`;
               <div className="ios-form-row dynamic-field">
                 <label>¿Cuál EPS?</label>
                 <div className="ios-input-wrapper">
-                  <input type="text" value={otraEps} onChange={e => setOtraEps(e.target.value)} required placeholder="Ej. EPS XYZ" className="ios-text-input" />
+                  <input type="text" value={otraEps} onChange={e => setOtraEps(e.target.value)} placeholder="Ej. EPS XYZ" className="ios-text-input" />
                 </div>
               </div>
             )}
             <div className="ios-form-row dynamic-field">
               <label>Contacto/Asesor</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={epsContacto} onChange={e => setEpsContacto(e.target.value)} required placeholder="Ej. Dra. Ramírez" className="ios-text-input" />
+                <input type="text" value={epsContacto} onChange={e => setEpsContacto(e.target.value)} placeholder="Ej. Dra. Ramírez" className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
               <label>Teléfono/Ext</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={epsTelefono} onChange={e => setEpsTelefono(e.target.value)} required placeholder="Ej. Ext 104" className="ios-text-input" />
+                <input type="text" value={epsTelefono} onChange={e => setEpsTelefono(e.target.value)} placeholder="Ej. Ext 104" className="ios-text-input" />
               </div>
             </div>
           </div>
@@ -488,19 +462,19 @@ ${descripcion}`;
             <div className="ios-form-row dynamic-field">
               <label>Institución</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={institucion} onChange={e => setInstitucion(e.target.value)} required placeholder="Ej. Hospital San José" className="ios-text-input" />
+                <input type="text" value={institucion} onChange={e => setInstitucion(e.target.value)} placeholder="Ej. Hospital San José" className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
               <label>Dependencia</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={instDependencia} onChange={e => setInstDependencia(e.target.value)} required placeholder="Ej. Urgencias" className="ios-text-input" />
+                <input type="text" value={instDependencia} onChange={e => setInstDependencia(e.target.value)} placeholder="Ej. Urgencias" className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
               <label>Contacto</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={instContacto} onChange={e => setInstContacto(e.target.value)} required placeholder="Ej. Jefe Enfermería" className="ios-text-input" />
+                <input type="text" value={instContacto} onChange={e => setInstContacto(e.target.value)} placeholder="Ej. Jefe Enfermería" className="ios-text-input" />
               </div>
             </div>
           </div>
@@ -512,19 +486,19 @@ ${descripcion}`;
             <div className="ios-form-row dynamic-field">
               <label>Secretaría</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={gobSecretaria} onChange={e => setGobSecretaria(e.target.value)} required placeholder="Ej. Sec. de Salud" className="ios-text-input" />
+                <input type="text" value={gobSecretaria} onChange={e => setGobSecretaria(e.target.value)} placeholder="Ej. Sec. de Salud" className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
               <label>Funcionario</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={gobFuncionario} onChange={e => setGobFuncionario(e.target.value)} required placeholder="Ej. Dr. López" className="ios-text-input" />
+                <input type="text" value={gobFuncionario} onChange={e => setGobFuncionario(e.target.value)} placeholder="Ej. Dr. López" className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
               <label>Teléfono</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={gobTelefono} onChange={e => setGobTelefono(e.target.value)} required placeholder="Ej. 300..." className="ios-text-input" />
+                <input type="text" value={gobTelefono} onChange={e => setGobTelefono(e.target.value)} placeholder="Ej. 300..." className="ios-text-input" />
               </div>
             </div>
           </div>
@@ -536,13 +510,13 @@ ${descripcion}`;
             <div className="ios-form-row dynamic-field">
               <label>Funcionario/Médico</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={dirFuncionario} onChange={e => setDirFuncionario(e.target.value)} required placeholder="Ej. Dra. Martínez" className="ios-text-input" />
+                <input type="text" value={dirFuncionario} onChange={e => setDirFuncionario(e.target.value)} placeholder="Ej. Dra. Martínez" className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
               <label>Dependencia/Área</label>
               <div className="ios-input-wrapper">
-                <input type="text" value={dirDependencia} onChange={e => setDirDependencia(e.target.value)} required placeholder="Ej. Gerencia, Auditoría" className="ios-text-input" />
+                <input type="text" value={dirDependencia} onChange={e => setDirDependencia(e.target.value)} placeholder="Ej. Gerencia, Auditoría" className="ios-text-input" />
               </div>
             </div>
           </div>
@@ -577,13 +551,13 @@ ${descripcion}`;
             <div className="ios-form-row dynamic-field">
               <label>Procedimiento</label>
               <div className="ios-input-wrapper">
-                <input type="text" placeholder="Ej. Endoscopia" value={procNombre} onChange={e => setProcNombre(e.target.value)} required className="ios-text-input" />
+                <input type="text" placeholder="Ej. Endoscopia" value={procNombre} onChange={e => setProcNombre(e.target.value)} className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
               <label>Especialidad</label>
               <div className="ios-input-wrapper">
-                <input type="text" placeholder="Ej. Gastroenterología" value={procEspecialidad} onChange={e => setProcEspecialidad(e.target.value)} required className="ios-text-input" />
+                <input type="text" placeholder="Ej. Gastroenterología" value={procEspecialidad} onChange={e => setProcEspecialidad(e.target.value)} className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field" style={{ overflow: 'visible' }}>
@@ -615,13 +589,13 @@ ${descripcion}`;
             <div className="ios-form-row dynamic-field">
               <label>Especialidad</label>
               <div className="ios-input-wrapper">
-                <input type="text" placeholder="Ej. Pediatría" value={especialidad} onChange={e => setEspecialidad(e.target.value)} required className="ios-text-input" />
+                <input type="text" placeholder="Ej. Pediatría" value={especialidad} onChange={e => setEspecialidad(e.target.value)} className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
               <label>Fecha de Cita</label>
               <div className="ios-input-wrapper">
-                <input type="date" value={fechaCita} onChange={e => setFechaCita(e.target.value)} required className="ios-text-input" />
+                <input type="date" value={fechaCita} onChange={e => setFechaCita(e.target.value)} className="ios-text-input" />
               </div>
             </div>
           </div>
@@ -675,19 +649,19 @@ ${descripcion}`;
             <div className="ios-form-row dynamic-field">
               <label>IPS Origen</label>
               <div className="ios-input-wrapper">
-                <input type="text" placeholder="De dónde remiten" value={refIpsOrigen} onChange={e => setRefIpsOrigen(e.target.value)} required className="ios-text-input" />
+                <input type="text" placeholder="De dónde remiten" value={refIpsOrigen} onChange={e => setRefIpsOrigen(e.target.value)} className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
               <label>IPS Destino</label>
               <div className="ios-input-wrapper">
-                <input type="text" placeholder="Hacia dónde remiten" value={refIpsDestino} onChange={e => setRefIpsDestino(e.target.value)} required className="ios-text-input" />
+                <input type="text" placeholder="Hacia dónde remiten" value={refIpsDestino} onChange={e => setRefIpsDestino(e.target.value)} className="ios-text-input" />
               </div>
             </div>
             <div className="ios-form-row dynamic-field">
               <label>Diagnóstico (Dx)</label>
               <div className="ios-input-wrapper">
-                <input type="text" placeholder="Ej. Apendicitis Aguda" value={refDiagnostico} onChange={e => setRefDiagnostico(e.target.value)} required className="ios-text-input" />
+                <input type="text" placeholder="Ej. Apendicitis Aguda" value={refDiagnostico} onChange={e => setRefDiagnostico(e.target.value)} className="ios-text-input" />
               </div>
             </div>
           </div>
@@ -733,7 +707,7 @@ ${descripcion}`;
                   <div className="ios-form-row dynamic-field">
                     <label>¿Cuál EPS?</label>
                     <div className="ios-input-wrapper">
-                      <input type="text" value={otraEps} onChange={e => setOtraEps(e.target.value)} required placeholder="Ej. EPS XYZ" className="ios-text-input" />
+                      <input type="text" value={otraEps} onChange={e => setOtraEps(e.target.value)} placeholder="Ej. EPS XYZ" className="ios-text-input" />
                     </div>
                   </div>
                 )}
@@ -758,7 +732,7 @@ ${descripcion}`;
           <div className="ios-form-row dynamic-field">
             <label>Especifique</label>
             <div className="ios-input-wrapper">
-              <input type="text" placeholder="¿Qué medio?" value={otroMedio} onChange={e => setOtroMedio(e.target.value)} required className="ios-text-input" />
+              <input type="text" placeholder="¿Qué medio?" value={otroMedio} onChange={e => setOtroMedio(e.target.value)} className="ios-text-input" />
             </div>
           </div>
         )}
@@ -768,7 +742,6 @@ ${descripcion}`;
           <textarea 
             value={descripcion} 
             onChange={e => setDescripcion(e.target.value)} 
-            required 
             placeholder="Escribe los detalles aquí..."
             rows="3"
           />
@@ -779,7 +752,6 @@ ${descripcion}`;
           <textarea 
             value={gestion} 
             onChange={e => setGestion(e.target.value)} 
-            required 
             placeholder="¿Qué gestión se realizó?"
             rows="4"
           />
