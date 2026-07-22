@@ -156,7 +156,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
         if (r.dir_funcionario) details += `\nFuncionario: ${r.dir_funcionario}`;
         
         const rowData = [
-          new Date(r.created_at).toLocaleDateString('es-CO'),
+          new Date(r.created_at).toLocaleString('es-CO', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }),
           r.solicitante,
           r.solicitud,
           r.medio,

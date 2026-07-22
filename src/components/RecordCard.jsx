@@ -34,7 +34,7 @@ const RecordCard = ({ record: r }) => {
       <div className="rc-header">
         <div className="rc-header-left">
           <span className="rc-solicitud-badge">{r.solicitud}</span>
-          <span className="rc-date">{new Date(r.created_at).toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric'})}</span>
+          <span className="rc-date">{new Date(r.created_at).toLocaleString('es-CO', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}</span>
         </div>
         <span className="rc-solicitante-chip" style={{backgroundColor: solicitanteBadgeColor(r.solicitante) + '20', color: solicitanteBadgeColor(r.solicitante), border: `1px solid ${solicitanteBadgeColor(r.solicitante)}40`}}>
           {r.solicitante}
