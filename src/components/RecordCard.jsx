@@ -90,7 +90,7 @@ const RecordCard = ({ record: r }) => {
 
       {/* ── Medio y detalles de cita ── */}
       <div className="rc-tags-row">
-        <span className="rc-tag">📡 {r.medio === 'Otro' && r.otro_medio ? r.otro_medio : r.medio}</span>
+        <span className="rc-tag">📡 {r.medio}{r.otro_medio ? ` (${r.otro_medio})` : ''}</span>
         {r.fecha_cita && <span className="rc-tag">📅 {r.fecha_cita}</span>}
         {r.especialidad && <span className="rc-tag">🩺 {r.especialidad}</span>}
         {r.eps_asociada && !r.eps_nombre && <span className="rc-tag">💊 {r.eps_asociada}</span>}

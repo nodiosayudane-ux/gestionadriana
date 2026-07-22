@@ -252,7 +252,8 @@ ${descripcion}`;
       ...(solicitud === 'Agendamiento' && { fecha_cita: fechaCita, especialidad }),
       ...(solicitud === 'Referencia y Contrarreferencia' && { institucion }),
       ...(solicitud === 'Aseguramiento' && { eps_asociada: epsFinal }),
-      ...(medio === 'Otro' && { otro_medio: otroMedio }),
+      // Guardar siempre el detalle del medio si tiene valor
+      ...(otroMedio.trim() && { otro_medio: otroMedio.trim() }),
       ...(solicitante === 'Particular' && { 
         particular_nombre: particularNombre,
         particular_tipo_doc: particularTipoDoc,
@@ -722,12 +723,44 @@ ${descripcion}`;
             <IosSelect 
               value={medio} 
               options={MEDIOS} 
-              onChange={setMedio} 
+              onChange={(val) => { setMedio(val); setOtroMedio(''); }} 
             />
           </div>
         </div>
 
-        {/* Conditional Field based on Medio */}
+        {/* Campo de detalle contextual para cada Medio */}
+        {medio === 'WhatsApp' && (
+          <div className="ios-form-row dynamic-field">
+            <label>Número de WhatsApp</label>
+            <div className="ios-input-wrapper">
+              <input type="tel" placeholder="Ej. 300 123 4567" value={otroMedio} onChange={e => setOtroMedio(e.target.value)} className="ios-text-input" />
+            </div>
+          </div>
+        )}
+        {medio === 'Telefónica' && (
+          <div className="ios-form-row dynamic-field">
+            <label>Número de Teléfono</label>
+            <div className="ios-input-wrapper">
+              <input type="tel" placeholder="Ej. 300 123 4567" value={otroMedio} onChange={e => setOtroMedio(e.target.value)} className="ios-text-input" />
+            </div>
+          </div>
+        )}
+        {medio === 'Correo' && (
+          <div className="ios-form-row dynamic-field">
+            <label>Dirección de Correo</label>
+            <div className="ios-input-wrapper">
+              <input type="email" placeholder="Ej. ejemplo@eps.com" value={otroMedio} onChange={e => setOtroMedio(e.target.value)} className="ios-text-input" />
+            </div>
+          </div>
+        )}
+        {medio === 'Presencial' && (
+          <div className="ios-form-row dynamic-field">
+            <label>Persona / Lugar</label>
+            <div className="ios-input-wrapper">
+              <input type="text" placeholder="Ej. Ventanilla, Consultorio 3" value={otroMedio} onChange={e => setOtroMedio(e.target.value)} className="ios-text-input" />
+            </div>
+          </div>
+        )}
         {medio === 'Otro' && (
           <div className="ios-form-row dynamic-field">
             <label>Especifique</label>
