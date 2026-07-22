@@ -27,7 +27,7 @@ function Dashboard({ onLogout, theme, toggleTheme }) {
   const [loading, setLoading] = useState(false);
   
   // Form state
-  const [solicitante, setSolicitante] = useState('');
+  const [solicitante, setSolicitante] = useState('EPS');
   const [solicitud, setSolicitud] = useState('');
   const [medio, setMedio] = useState('');
   const [descripcion, setDescripcion] = useState('');
